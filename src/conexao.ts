@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import Knex from 'knex';
+import knex from 'knex';
 const { DB_CLIENT, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME } = process.env;
 
 interface DBConfig {
@@ -29,4 +29,4 @@ const knexConfig: DBConfig = {
     ssl: { rejectUnauthorized: false }
 };
 
-export default Knex(knexConfig);
+export default knex(knexConfig);
