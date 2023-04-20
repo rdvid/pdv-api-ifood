@@ -13,7 +13,6 @@ const schemaCadastroUsuario = Joi.object({
     }),
 });
 
-
 export {
     schemaCadastroUsuario
 }

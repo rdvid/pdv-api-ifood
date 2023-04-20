@@ -5,6 +5,6 @@ import { schemaCadastroUsuario } from './middlewares/schemasJoi'
 
 const rotas: Router = express.Router();
 
-rotas.get('/usuarios', validarCamposBody(schemaCadastroUsuario), emailExiste(false), cadastrarUsuario)
+rotas.post('/usuarios', validarCamposBody(schemaCadastroUsuario), emailExiste(false), cadastrarUsuario)
 
 export default rotas;

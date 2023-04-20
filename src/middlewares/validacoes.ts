@@ -5,10 +5,10 @@ type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
 const validarCamposBody = (joiSchema: ObjectSchema) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await joiSchema.validateAsync(req.body);
+        await joiSchema.validateAsync(req.body)
         next();
     } catch (error: any) {
-        return res.status(500).json(error.message);
+        return res.status(500).json({ mensagem: error.message });
     }
 };
 const emailExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {

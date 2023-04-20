@@ -13,3 +13,5 @@ app.use(rotas)
 app.listen(port, () => {
     console.log(`port: ${port}`)
 })
+
+export default app;
