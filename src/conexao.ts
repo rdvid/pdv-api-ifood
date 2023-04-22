@@ -7,7 +7,7 @@ interface DBConfig {
     client: string;
     connection: {
         host: string;
-        port: number;
+        port: string;
         user: string;
         password: string;
         database: string;
@@ -21,7 +21,7 @@ const knexConfig: DBConfig = {
     client: DB_CLIENT!,
     connection: {
         host: DB_HOST!,
-        port: Number(DB_PORT!),
+        port: DB_PORT!,
         user: DB_USER!,
         password: DB_PASS!,
         database: DB_NAME!
