@@ -13,8 +13,6 @@ const schemaCadastroUsuario = Joi.object({
     }),
 });
 
-<<<<<<< HEAD
-=======
 const schemaLogin = Joi.object({
     email: Joi.string().email().required().messages({
         'any.required': 'O campo email é obrigatório!',
@@ -26,7 +24,6 @@ const schemaLogin = Joi.object({
 })
 
 
->>>>>>> 6a2265b2058635eaab8a455db6b4f1b41d8afbdf
 export {
     schemaCadastroUsuario,
     schemaLogin
