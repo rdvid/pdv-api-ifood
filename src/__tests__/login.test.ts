@@ -1,19 +1,68 @@
 import request from 'supertest';
 import app from '../index';
-import http from 'http'
+import http from 'http';
 
 let server: http.Server;
 
 beforeEach((done) => {
   server = app.listen(3003, () => {
-    done()
+    done();
   });
 });
 
 afterEach((done) => {
   server.close(() => {
-    done()
+    done();
   });
+});
+
+test('POST /usuarios - Cadastro de usuarios deve retornar status 500 ao enviar um corpo de requisição inválido', async () => {
+  const response = await request(server)
+    .post('/usuarios')
+    .send({ email: 'thiago@email.com', senha: '123456' }); // sem o campo nome
+  expect(response.status).toBe(400);
+});
+
+test('POST /usuarios - Cadastro de usuarios deve retornar status 500 ao enviar um corpo de requisição inválido', async () => {
+  const response = await request(server)
+    .post('/usuarios')
+    .send({ nome: 'Thiago Oliveira de Lima', senha: '123456' }); // sem o campo de email
+  expect(response.status).toBe(400);
+});
+
+test('POST /usuarios - Cadastro de usuarios deve cadastrar um usuário com sucesso e retornar status 201', async () => {
+  const response = await request(server)
+    .post('/usuarios')
+    .send({ nome: 'Rafael', email: 'rafael@admin.com', senha: 'teste' });
+  expect(response.status).toBe(201);
+});
+
+test('POST /usuarios - Cadastro de usuarios deve retornar status 500 ao enviar um email que já existe no banco de dados', async () => {
+  const response = await request(server)
+    .post('/usuarios')
+    .send({ nome: 'Thiago Oliveira de Lima', email: 'rafael@admin.com', senha: '123456' });
+  expect(response.status).toBe(409);
+});
+
+test('POST /login com credenciais validas retorna status 200', async () => {
+  const response = await request(server)
+    .post('/login')
+    .send({ email: 'rafael@admin.com', senha: 'teste' });
+  expect(response.status).toBe(200);
+});
+
+test('POST /login com credenciais invalidas retorna status 401', async () => {
+  const response = await request(server)
+    .post('/login')
+    .send({ email: 'rafael@admin.com', senha: 'aaaaa' });
+  expect(response.status).toBe(401);
+});
+
+test('POST /login sem credenciais retorna status 500', async () => {
+  const response = await request(server)
+    .post('/login')
+    .send({});
+  expect(response.status).toBe(500);
 });
 
 test('POST /login com credenciais validas retorna status 200', async () => {
