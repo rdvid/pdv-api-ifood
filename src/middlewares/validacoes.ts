@@ -31,6 +31,24 @@ const validarLogin = (joiSchema: ObjectSchema) => async (req: Request, res: Resp
     }
 };
 
+const validarLogin = (joiSchema: ObjectSchema) => async (req: Request, res: Response, next: NextFunction) => {
+        const {email, senha}: {email:string, senha:string} = req.body
+    try {
+        await joiSchema.validateAsync(req.body);
+
+        const usuario = await knex('usuarios').where({email: email})
+
+        const verificarSenha = await bcrypt.compare(senha, usuario[0].senha);
+    
+        if(!verificarSenha){
+            return res.status(401).json({mensagem: "senha incorreta."})
+        }
+        next();
+    } catch (error:any) {
+        return res.status(500).json(error.message);
+    }
+};
+
 const emailExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
     const { email }: { email: string } = req.body
     try {
