@@ -38,6 +38,7 @@ const cadastrarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(201).json(insert[0]);
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 });
@@ -54,6 +55,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (err) {
+        console.log(err);
         return res.status(500).json({ mensagem: `erro interno do servidor ${err.message}` });
     }
 });

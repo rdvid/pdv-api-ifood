@@ -60,6 +60,7 @@ const emailExiste = (vlrEsperado) => (req, res, next) => __awaiter(void 0, void 
         }
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 });
