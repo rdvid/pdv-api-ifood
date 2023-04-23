@@ -26,6 +26,7 @@ test('POST /usuario - Cadastro de usuarios deve retornar status 500 ao enviar um
 test('POST /usuario - Cadastro de usuarios deve retornar status 500 ao enviar um corpo de requisição inválido', async () => {
   const response = await request(server)
     .post('/usuario')
+    .set('enviroment', 'teste')
     .send({ nome: 'Thiago Oliveira de Lima', senha: '123456' }); // sem o campo de email
   expect(response.status).toBe(400);
 });
@@ -90,20 +91,27 @@ test('POST /login sem credenciais retorna status 401', async () => {
 test('GET /usuario sem token retorna status 401', async () => {
   const response = await request(server)
     .get('/usuario')
-    .set('Authorization', '') // Defina o cabeçalho Authorization com o token
+    .set('Authorization', '') // cabeçalho Authorization sem o token
   expect(response.status).toBe(401);
 });
 
 test('GET /usuario com token inválido ou expirado retorna status 500', async () => {
   const response = await request(server)
     .get('/usuario')
-    .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ`) // Defina o cabeçalho Authorization com o token
+    .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ`) //cabeçalho Authorization com o token inexistente
   expect(response.status).toBe(500);
 });
 
 test('GET /usuario com token ativo retorna status 200', async () => {
   const response = await request(server)
     .get('/usuario')
-    .set('Authorization', `Bearer ${token}`) // Defina o cabeçalho Authorization com o token
+    .set('Authorization', `Bearer ${token}`) // cabeçalho Authorization com o token funcional
+  expect(response.status).toBe(200);
+});
+
+test('GET /categoria lista todas as categorias cadastradas no banco de dados', async () => {
+  const response = await request(server)
+    .get('/categoria')
+    .set('Authorization', `Bearer ${token}`) // cabeçalho Authorization com o token funcional
   expect(response.status).toBe(200);
 });
