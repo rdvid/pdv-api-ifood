@@ -12,8 +12,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "servidor local"
+      "url": "https://pdv-api-ifood.herokuapp.com/",
+      "description": "deploy da aplicação"
+    },
+    {
+      "url": "http://localhost:3000/",
+      "description": "local host"
     }
   ],
   "tags": [
@@ -27,7 +31,7 @@
     }
   ],
   "paths": {
-    "/usuarios": {
+    "/usuario": {
       "post": {
         "tags": [
           "Usuários"
@@ -93,7 +97,7 @@
     "/login": {
       "post": {
         "tags": [
-          "Usuários"
+          "Autenticação"
         ],
         "summary": "Efetuar login",
         "description": "Efetuar login de um usuário já cadastrado no sistema!",
@@ -118,6 +122,9 @@
                   "$ref": "#/components/schemas/loginResponse/status200"
                 }
               }
+            },
+            "schema": {
+              "type": "string"
             }
           },
           "400": {
@@ -288,6 +295,14 @@
           }
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Bearer token"
     }
   }
 }
