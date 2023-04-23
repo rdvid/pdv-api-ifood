@@ -6,13 +6,13 @@ let server: http.Server;
 
 beforeEach((done) => {
   server = app.listen(3003, () => {
-    done()
+    done();
   });
 });
 
 afterEach((done) => {
   server.close(() => {
-    done()
+    done();
   });
 });
 
