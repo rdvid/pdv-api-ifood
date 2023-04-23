@@ -3,7 +3,9 @@ import { ObjectSchema, string } from 'joi';
 import knex from '../conexao'
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
-type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
+import dotenv from 'dotenv';
+dotenv.config();
+const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
 const validarCamposBody = (joiSchema: ObjectSchema) => async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -68,7 +70,7 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
 
     try {
 
-        const { usuario } = jwt.verify(token, senhajwt) as JwtPayload
+        const { usuario } = jwt.verify(token, senhaJwt) as JwtPayload
         const usuarioLogado = await knex('usuarios').where({ id: usuario })
         if (!usuarioLogado) {
             return res.status(401).json({ mensagem: "Usuário não autorizado" })
