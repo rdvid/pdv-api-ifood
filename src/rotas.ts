@@ -8,11 +8,11 @@ import swaggerDoc from '../swagger.json';
 const rotas: Router = express.Router();
 
 
-rotas.post('/usuarios', validarCamposBody(schemaCadastroUsuario), emailExiste(false), cadastrarUsuario);
+rotas.post('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false), cadastrarUsuario);
 rotas.post('/login', emailExiste(true), validarLogin(schemaLogin), login);
 rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 rotas.use(usuarioLogado)
 rotas.get('/usuario', inspecionarUsuario)
-rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), editarUsuario)
+rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false), editarUsuario)
 
 export default rotas;

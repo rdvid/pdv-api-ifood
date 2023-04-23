@@ -28,7 +28,6 @@ const validarLogin = (joiSchema: ObjectSchema) => async (req: Request, res: Resp
         }
         next();
     } catch (error: any) {
-        console.log(error)
         return res.status(500).json(error.message);
     }
 };
@@ -53,7 +52,6 @@ const emailExiste = (vlrEsperado: boolean) => async (req: Request, res: Response
         }
 
     } catch (error: any) {
-        console.log(error)
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 };

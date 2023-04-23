@@ -11,9 +11,8 @@ interface DBConfig {
         user: string;
         password: string;
         database: string;
-        ssl: { rejectUnauthorized: boolean };
     };
-}
+};
 
 const knexConfig: DBConfig = {
     client: DB_CLIENT!,
@@ -22,8 +21,7 @@ const knexConfig: DBConfig = {
         port: parseInt(DB_PORT!),
         user: DB_USER!,
         password: DB_PASS!,
-        database: DB_NAME!,
-        ssl: { rejectUnauthorized: false },
+        database: DB_NAME!
     },
 };
 

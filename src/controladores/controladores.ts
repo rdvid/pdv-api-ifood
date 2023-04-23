@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import knex from '../conexao';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { AnyNaptrRecord } from 'dns';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
@@ -15,7 +16,6 @@ const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromis
         const insert = await knex('usuarios').insert({ nome, email, senha: senhaHash }).returning(['id', 'nome', 'email']);
         return res.status(201).json(insert[0]);
     } catch (error: any) {
-        console.log(error)
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 };
@@ -59,8 +59,8 @@ const editarUsuario = async (req: Request, res: Response): tipoRespostaPromise =
         const senhaHash: string = await bcrypt.hash(senha.toString(), 10)
         await knex('usuarios').update({ nome, email, senha: senhaHash }).where({ id: usuario })
         return res.status(200).json({ mensagem: "usuario atualizado" })
-    } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno de servidor" })
+    } catch (error: any) {
+        return res.status(500).json({ mensagem: "Erro interno de servidor2" })
     }
 };
 
