@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import knex from '../conexao';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { AnyNaptrRecord } from 'dns';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
@@ -22,7 +21,6 @@ const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromis
 
 const login = async (req: Request, res: Response): tipoRespostaPromise => {
     const { email, senha }: { email: string, senha: string } = req.body
-
     try {
         const usuario = await knex('usuarios').where({ email: email })
         const token = jwt.sign({ usuario: usuario[0].id }, senhaJwt, { expiresIn: "6h" })
