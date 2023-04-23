@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import knex from '../conexao';
-import jwt, { Secret } from 'jsonwebtoken';
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
@@ -32,12 +32,41 @@ const login = async (req: Request, res: Response): tipoRespostaPromise => {
             token
         })
     } catch (err: any) {
-        console.log(err)
         return res.status(500).json({ mensagem: `erro interno do servidor ${err.message}` })
+    }
+};
+const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
+    const token: string = req.headers.authorization?.split(" ")[1] as string
+    const { usuario } = jwt.decode(token) as JwtPayload
+
+    try {
+
+        let usuarioRetornado = await knex('usuarios').where({ id: usuario })
+        const { senha: _, ...usuarioSemSenha } = usuarioRetornado[0]
+
+        return res.status(200).json(usuarioSemSenha)
+
+    } catch (error) {
+        return res.status(200).json({ mensagem: "Erro interno de servidor" })
+    }
+};
+
+const editarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
+    const token: string = req.headers.authorization?.split(" ")[1] as string
+    const { usuario } = jwt.decode(token) as JwtPayload
+    try {
+        const { nome, email, senha }: { nome: string, email: string, senha: string } = req.body
+        const senhaHash: string = await bcrypt.hash(senha.toString(), 10)
+        await knex('usuarios').update({ nome, email, senha: senhaHash }).where({ id: usuario })
+        return res.status(200).json({ mensagem: "usuario atualizado" })
+    } catch (error) {
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 };
 
 export {
     cadastrarUsuario,
-    login
+    login,
+    inspecionarUsuario,
+    editarUsuario
 }
