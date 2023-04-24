@@ -48,7 +48,7 @@ test('POST /usuario - Cadastro de usuarios deve retornar status 500 ao enviar um
 test('POST /login com credenciais validas retorna status 200', async () => {
   const response = await request(server)
     .post('/login')
-    .send({ email: 'rafael@admin.com', senha: 'teste' });
+    .send({ email: 'teste@teste.com', senha: 'senha' });
   expect(response.status).toBe(200);
 });
 
