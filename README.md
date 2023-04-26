@@ -177,6 +177,186 @@ Fazer deploy do projeto e disponibilizar a URL.
 
 ---
 
+<details>
+<summary>2ª Sprint</summary>
+<br>
+
+<details>
+<summary><b>Banco de Dados</b></summary>
+<br>
+
+Crie as seguintes tabelas e colunas abaixo: 
+
+**ATENÇÃO! Os nomes das tabelas e das colunas a serem criados devem seguir exatamente os nomes listados abaixo.**
+
+-   produtos
+    -   id
+    -   descricao
+    -   quantidade_estoque
+    -   valor
+    -   categoria_id
+-   clientes
+    -   id
+    -   nome
+    -   email (campo único)
+    -   cpf (campo único) 
+    -   cep 
+    -   rua
+    -   numero
+    -   bairro
+    -   cidade
+    -   estado
+
+</details>
+
+---
+
+## **ATENÇÃO**: Todas as funcionalidades (endpoints) a seguir, a partir desse ponto, deverão exigir o token de autenticação do usuário logado, recebendo no header com o formato Bearer Token. Portanto, em cada funcionalidade será necessário validar o token informado.
+
+---
+
+<details>
+<summary><b>Cadastrar Produto</b></summary>
+
+#### `POST` `/produto`
+
+Essa é a rota que permite o usuário logado cadastrar um novo produto no sistema.
+
+Critérios de aceite:
+
+    -   Validar os campos obrigatórios:
+        -   descricao
+        -   quantidade_estoque
+        -   valor
+        -   categoria_id
+    -   A categoria informada na qual o produto será vinculado deverá existir.
+
+</details>
+
+<details>
+<summary><b>Editar dados do produto</b></summary>
+
+#### `PUT` `/produto/:id`
+
+Essa é a rota que permite o usuário logado a atualizar as informações de um produto cadastrado.
+
+Critérios de aceite:
+
+    -   Validar se existe produto para o id enviado como parâmetro na rota.
+    -   Validar os campos obrigatórios:
+        -   descricao
+        -   quantidade_estoque
+        -   valor
+        -   categoria_id
+    -   A categoria informada na qual o produto será vinculado deverá existir.
+
+</details>
+
+<details>
+<summary><b>Listar Produtos</b></summary>
+
+#### `GET` `/produto`
+
+Essa é a rota que será chamada quando o usuário logado quiser listar todos os produtos cadastrados.
+
+Deveremos incluir um parâmetro do tipo query **categoria_id** para que seja possível consultar produtos por categorias, de modo, que serão filtrados de acordo com o id de uma categoria.
+
+Critérios de aceite:
+
+    - Caso seja enviado o parâmetro do tipo query **categoria_id**, filtrar os produtos de acordo com a categoria, caso o id de categoria informada exista.
+    - Caso não seja informado o parâmetro do tipo query **categoria_id** todos os produtos cadastrados deverão ser retornados.
+
+</details>
+
+<details>
+<summary><b>Detalhar Produto</b></summary>
+
+#### `GET` `/produto/:id`
+
+Essa é a rota que permite o usuário logado obter um de seus produtos cadastrados.  
+
+Critérios de aceite:
+
+    -   Validar se existe produto para o id enviado como parâmetro na rota.
+
+</details>
+
+<details>
+<summary><b>Excluir Produto por ID</b></summary>
+
+#### `DELETE` `/produto/:id`
+
+Essa é a rota que será chamada quando o usuário logado quiser excluir um de seus produtos cadastrados.  
+
+Critérios de aceite:
+
+    -   Validar se existe produto para o id enviado como parâmetro na rota.
+
+</details>
+
+<details>
+<summary><b>Cadastrar Cliente</b></summary>
+
+#### `POST` `/cliente`
+
+Essa é a rota que permite usuário logado cadastrar um novo cliente no sistema.
+
+Critérios de aceite:
+
+    -   Validar os campos obrigatórios:
+        -   nome
+        -   email
+        -   cpf
+    -   O campo e-mail no banco de dados deve ser único para cada registro, não permitindo dois clientes possuírem o mesmo e-mail.
+    -   O campo cpf no banco de dados deve ser único para cada registro, não permitindo dois clientes possuírem o mesmo cpf.
+
+</details>
+
+<details>
+<summary><b>Editar dados do cliente</b></summary>
+
+#### `PUT` `/cliente/:id`
+
+Essa é a rota que permite o usuário realizar atualização de um cliente cadastrado.
+
+Critérios de aceite:
+
+    -   Validar se existe cliente para o id enviado como parâmetro na rota.
+    -   Validar os campos obrigatórios:
+        -   nome
+        -   email
+        -   cpf
+    -   O campo e-mail no banco de dados deve ser único para cada registro, não permitindo dois clientes possuírem o mesmo e-mail.
+    -   O campo cpf no banco de dados deve ser único para cada registro, não permitindo dois clientes possuírem o mesmo cpf.
+
+</details>
+
+<details>
+<summary><b>Listar Clientes</b></summary>
+
+#### `GET` `/cliente`
+
+Essa é a rota que será chamada quando o usuário logado quiser listar todos os clientes cadastrados.
+
+</details>
+
+<details>
+<summary><b>Detalhar Cliente</b></summary>
+
+#### `GET` `/cliente/:id`
+
+Essa é a rota que será chamada quando o usuário logado quiser obter um de seus clientes cadastrados.  
+
+Critérios de aceite:
+
+    -   Validar se existe cliente para o id enviado como parâmetro na rota.
+
+</details>
+
+</details>
+
+---
+
 ## Aulas úteis:
 
 -   [Git e fluxo de trabalho em equipe](https://aulas.cubos.academy/turma/45f23573-f576-4319-ab62-3ad711c11b1d/aulas/523a0925-ef87-4bb5-8a3c-f27b97153d15)
