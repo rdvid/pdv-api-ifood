@@ -71,10 +71,22 @@ const listarCategorias = async (req: Request, res: Response): tipoRespostaPromis
     }
 };
 
+const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise => {
+    try {
+        const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string, estado: string, } = req.body
+        await knex('clientes').insert({ nome, email, cpf, cep, rua, numero, bairro, cidade, estado });
+        return res.status(201).send({ mensagem: "cliente cadastrado" });
+    } catch (erro: any) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
+
+    }
+}
+
 export {
     cadastrarUsuario,
     login,
     inspecionarUsuario,
     editarUsuario,
-    listarCategorias
+    listarCategorias,
+    cadastraCliente
 }
