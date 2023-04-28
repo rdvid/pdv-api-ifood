@@ -35,6 +35,7 @@ create table clientes(
     nome text not null,
     email varchar(100) unique not null,
     cpf int unique not null,
+    cep int not null
     rua text not null,
     numero int not null, 
     bairro text not null,
