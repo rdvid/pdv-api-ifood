@@ -81,9 +81,35 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
 
 }
 
+const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
+    const { cpf }: { cpf: string } = req.body
+    try {
+
+        const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpf }).first();
+
+        if (cpfExists === vlrEsperado) {
+            next();
+        } else {
+
+            if (cpfExists) {
+                return res.status(409).json({ mensagem: "Não é possível prosseguir, o cpf informado já existe em nossa base de dados!" });
+            };
+
+            if (!cpfExists) {
+                return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
+            }
+        }
+
+    } catch (erro: any) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+};
+
+
 export {
     validarCamposBody,
     validarLogin,
     emailExiste,
-    usuarioLogado
+    usuarioLogado,
+    cpfExiste
 }
