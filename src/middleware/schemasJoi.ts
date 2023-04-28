@@ -23,8 +23,40 @@ const schemaLogin = Joi.object({
     }),
 })
 
+const schemaCadastroCliente = Joi.object({
+    nome: Joi.string().required().messages({
+        'any.required': 'O campo nome é obrigatório!'
+    }),
+    email: Joi.string().email().required().messages({
+        'any.required': 'O campo email é obrigatório!',
+        'string.email': 'O valor informado não é um e-mail válido'
+    }),
+    cpf: Joi.required().messages({
+        'any.required': 'O campo cpf é obrigatório!'
+    }),
+    cep: Joi.required().messages({
+        'any.required': 'O campo cep é obrigatório!'
+    }),
+    rua: Joi.required().messages({
+        'any.required': 'O campo rua é obrigatório!'
+    }),
+    numero: Joi.required().messages({
+        'any.required': 'O campo número é obrigatório!'
+    }),
+    bairro: Joi.required().messages({
+        'any.required': 'O campo bairro é obrigatório!'
+    }),
+    cidade: Joi.required().messages({
+        'any.required': 'O campo cidade é obrigatório!'
+    }),
+    estado: Joi.required().messages({
+        'any.required': 'O campo estado é obrigatório!'
+    }),
+});
+
 
 export {
     schemaCadastroUsuario,
-    schemaLogin
+    schemaLogin,
+    schemaCadastroCliente
 }
