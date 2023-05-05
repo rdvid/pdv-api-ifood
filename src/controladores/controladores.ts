@@ -15,7 +15,7 @@ const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromis
         const insert = await knex('usuarios').insert({ nome, email, senha: senhaHash }).returning(['id', 'nome', 'email']);
         return res.status(201).json(insert[0]);
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        return res.status(500).json({ mensagem: "3Erro interno do servidor" });
     }
 };
 
@@ -24,9 +24,9 @@ const login = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const usuario = await knex('usuarios').where({ email: email })
         const token = jwt.sign({ usuario: usuario[0].id }, senhaJwt, { expiresIn: "6h" })
-        const { senha: _, ...usuarioLogado } = usuario[0]
+        //const { senha: _, ...usuarioLogado } = usuario[0]
         return res.status(200).json({
-            usuario: usuarioLogado,
+            //usuario: usuarioLogado,
             token
         })
     } catch (err: any) {
@@ -45,7 +45,7 @@ const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaProm
         return res.status(200).json(usuarioSemSenha)
 
     } catch (error) {
-        return res.status(200).json({ mensagem: "Erro interno de servidor" })
+        return res.status(200).json({ mensagem: "4Erro interno de servidor" })
     }
 };
 
@@ -58,7 +58,7 @@ const editarUsuario = async (req: Request, res: Response): tipoRespostaPromise =
         await knex('usuarios').update({ nome, email, senha: senhaHash }).where({ id: usuario })
         return res.status(200).json({ mensagem: "usuario atualizado" })
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno de servidor2" })
+        return res.status(500).json({ mensagem: "5Erro interno de servidor2" })
     }
 };
 
@@ -67,7 +67,7 @@ const listarCategorias = async (req: Request, res: Response): tipoRespostaPromis
         const consulta = await knex('categorias');
         return res.status(200).json(consulta)
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno de servidor" })
+        return res.status(500).json({ mensagem: "6Erro interno de servidor" })
     }
 };
 
@@ -77,7 +77,8 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
         await knex('clientes').insert({ nome, email, cpf, cep, rua, numero, bairro, cidade, estado });
         return res.status(201).send({ mensagem: "cliente cadastrado" });
     } catch (erro: any) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" })
+        console.log(erro.message)
+        return res.status(500).json({ mensagem: "7Erro interno do servidor" })
 
     }
 }

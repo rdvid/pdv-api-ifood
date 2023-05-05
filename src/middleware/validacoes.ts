@@ -32,11 +32,11 @@ const validarLogin = (joiSchema: ObjectSchema) => async (req: Request, res: Resp
     }
 };
 
-const emailExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
+const emailExiste = (vlrEsperado: boolean, tabela: string) => async (req: Request, res: Response, next: NextFunction) => {
     const { email }: { email: string } = req.body
     try {
 
-        const emailExists: boolean = !!await knex('usuarios').select('*').where({ email: email }).first();
+        const emailExists: boolean = !!await knex(tabela).select('*').where({ email: email }).first();
 
         if (emailExists === vlrEsperado) {
             next();
@@ -52,7 +52,7 @@ const emailExiste = (vlrEsperado: boolean) => async (req: Request, res: Response
         }
 
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        return res.status(500).json({ mensagem: "1Erro interno do servidor" });
     }
 };
 
@@ -75,11 +75,43 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
         }
         next();
 
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({ mensagem: "Sua sessão expirou, realize o login novamente" })
     }
 
 }
+
+const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
+    const { cpf }: { cpf: string } = req.body
+    const textoDeRetorno: string = "CPF inválido. verifique os dados inseridos e tente novamente!"
+    try {
+        if (!cpf) {
+            return res.status(400).json({ mensagem: "O Campo CPF é obrigatório" })
+        }
+        if (cpf.length < 11 || cpf.length > 14) {
+            return res.status(400).json({ mensagem: textoDeRetorno })
+        }
+        let cpfarray: string[] = cpf.split("")
+        let cpfFormatado: string = ""
+        for (let item of cpfarray) {
+            if (item >= "0" && item <= "9") {
+                cpfFormatado += item
+            }
+        }
+        if (cpfFormatado.length !== 11) {
+            return res.status(400).json({ mensagem: textoDeRetorno })
+        }
+        if (cpfFormatado == "00000000000") {
+            return res.status(400).json({ mensagem: textoDeRetorno })
+        }
+
+        next()
+    } catch (erro: any) {
+
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+}
+
 
 const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
     const { cpf }: { cpf: string } = req.body
@@ -101,7 +133,8 @@ const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, 
         }
 
     } catch (erro: any) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        console.log(erro.message)
+        return res.status(500).json({ mensagem: "2Erro interno do servidor" });
     }
 };
 
@@ -111,5 +144,6 @@ export {
     validarLogin,
     emailExiste,
     usuarioLogado,
-    cpfExiste
+    cpfExiste,
+    cpfValido
 }

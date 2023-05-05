@@ -34,11 +34,11 @@ create table clientes(
     id serial primary key,
     nome text not null,
     email varchar(100) unique not null,
-    cpf int unique not null,
-    cep int not null
-    rua text not null,
-    numero int not null, 
-    bairro text not null,
-    cidade text not null,
-    estado text not null
+    cpf bigint unique not null,
+    cep int,
+    rua text,
+    numero int, 
+    bairro text,
+    cidade text,
+    estado text
 );
