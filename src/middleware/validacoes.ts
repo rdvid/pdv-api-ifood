@@ -81,7 +81,7 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
 
 }
 
-const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
+const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
     const { cpf }: { cpf: string } = req.body
     const textoDeRetorno: string = "CPF inválido. verifique os dados inseridos e tente novamente!"
     try {
@@ -89,8 +89,10 @@ const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
             return res.status(400).json({ mensagem: "O Campo CPF é obrigatório" })
         }
         if (cpf.length < 11 || cpf.length > 14) {
-            return res.status(400).json({ mensagem: textoDeRetorno })
+            return res.status(400).json({ mensagem: "1" + textoDeRetorno })
         }
+        let soma = 0
+        let resto
         let cpfarray: string[] = cpf.split("")
         let cpfFormatado: string = ""
         for (let item of cpfarray) {
@@ -99,25 +101,26 @@ const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
             }
         }
         if (cpfFormatado.length !== 11) {
-            return res.status(400).json({ mensagem: textoDeRetorno })
+            return res.status(400).json({ mensagem: "2" + textoDeRetorno })
         }
         if (cpfFormatado == "00000000000") {
-            return res.status(400).json({ mensagem: textoDeRetorno })
+            return res.status(400).json({ mensagem: "3" + textoDeRetorno })
         }
+        for (let i = 1; i <= 9; i++)
+            soma = soma + parseInt(cpfFormatado.substring(i - 1, i)) * (11 - i)
+        resto = (soma * 10) % 11
+        if ((resto == 10) || (resto == 11)) resto = 0
+        if (resto != parseInt(cpfFormatado.substring(9, 10)))
+            return res.status(400).json({ mensagem: "4" + textoDeRetorno })
+        soma = 0
+        for (let i = 1; i <= 10; i++)
+            soma = soma + parseInt(cpfFormatado.substring(i - 1, i)) * (12 - i)
+        resto = (soma * 10) % 11
+        if ((resto == 10) || (resto == 11)) resto = 0
+        if (resto != parseInt(cpfFormatado.substring(10, 11)))
+            return res.status(400).json({ mensagem: "5" + textoDeRetorno })
 
-        next()
-    } catch (erro: any) {
-
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
-    }
-}
-
-
-const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
-    const { cpf }: { cpf: string } = req.body
-    try {
-
-        const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpf }).first();
+        const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpfFormatado }).first();
 
         if (cpfExists === vlrEsperado) {
             next();
@@ -131,12 +134,37 @@ const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, 
                 return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
             }
         }
-
+        next()
     } catch (erro: any) {
-        console.log(erro.message)
-        return res.status(500).json({ mensagem: "2Erro interno do servidor" });
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
-};
+}
+
+
+// const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
+//     const { cpf }: { cpf: string } = req.body
+//     try {
+
+//         const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpf }).first();
+
+//         if (cpfExists === vlrEsperado) {
+//             next();
+//         } else {
+
+//             if (cpfExists) {
+//                 return res.status(409).json({ mensagem: "Não é possível prosseguir, o cpf informado já existe em nossa base de dados!" });
+//             };
+
+//             if (!cpfExists) {
+//                 return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
+//             }
+//         }
+
+//     } catch (erro: any) {
+//         console.log(erro.message)
+//         return res.status(500).json({ mensagem: "2Erro interno do servidor" });
+//     }
+// };
 
 
 export {
@@ -144,6 +172,6 @@ export {
     validarLogin,
     emailExiste,
     usuarioLogado,
-    cpfExiste,
+    // cpfExiste,
     cpfValido
 }

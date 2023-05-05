@@ -14,6 +14,6 @@ rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 rotas.use(usuarioLogado)
 rotas.get('/usuario', inspecionarUsuario)
 rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false, 'usuarios'), editarUsuario)
-rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(false, 'clientes'), cpfValido, cpfExiste(false), cadastraCliente)
+rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(false, 'clientes'), cpfValido(false), cadastraCliente)
 
 export default rotas;

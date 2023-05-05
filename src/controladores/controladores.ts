@@ -73,7 +73,16 @@ const listarCategorias = async (req: Request, res: Response): tipoRespostaPromis
 
 const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
-        const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string, estado: string, } = req.body
+        let { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string, estado: string, } = req.body
+        let cpfarray: string[] = cpf.split("")
+        let cpfFormatado: string = ""
+        for (let item of cpfarray) {
+            if (item >= "0" && item <= "9") {
+                cpfFormatado += item
+            }
+        }
+        cpf = cpfFormatado
+        console.log(cpf)
         await knex('clientes').insert({ nome, email, cpf, cep, rua, numero, bairro, cidade, estado });
         return res.status(201).send({ mensagem: "cliente cadastrado" });
     } catch (erro: any) {
