@@ -89,7 +89,7 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
             return res.status(400).json({ mensagem: "O Campo CPF é obrigatório" })
         }
         if (cpf.length < 11 || cpf.length > 14) {
-            return res.status(400).json({ mensagem: "1" + textoDeRetorno })
+            return res.status(400).json({ mensagem: textoDeRetorno })
         }
         let soma = 0
         let resto: number
@@ -101,17 +101,17 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
             }
         }
         if (cpfFormatado.length !== 11) {
-            return res.status(400).json({ mensagem: "2" + textoDeRetorno })
+            return res.status(400).json({ mensagem: textoDeRetorno })
         }
         if (cpfFormatado == "00000000000") {
-            return res.status(400).json({ mensagem: "3" + textoDeRetorno })
+            return res.status(400).json({ mensagem: textoDeRetorno })
         }
         for (let i = 1; i <= 9; i++)
             soma = soma + parseInt(cpfFormatado.substring(i - 1, i)) * (11 - i)
         resto = (soma * 10) % 11
         if ((resto == 10) || (resto == 11)) resto = 0
         if (resto != parseInt(cpfFormatado.substring(9, 10)))
-            return res.status(400).json({ mensagem: "4" + textoDeRetorno })
+            return res.status(400).json({ mensagem: textoDeRetorno })
         soma = 0
         for (let i = 1; i <= 10; i++)
             soma = soma + parseInt(cpfFormatado.substring(i - 1, i)) * (12 - i)
@@ -139,38 +139,10 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
     }
 }
 
-
-// const cpfExiste = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
-//     const { cpf }: { cpf: string } = req.body
-//     try {
-
-//         const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpf }).first();
-
-//         if (cpfExists === vlrEsperado) {
-//             next();
-//         } else {
-
-//             if (cpfExists) {
-//                 return res.status(409).json({ mensagem: "Não é possível prosseguir, o cpf informado já existe em nossa base de dados!" });
-//             };
-
-//             if (!cpfExists) {
-//                 return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
-//             }
-//         }
-
-//     } catch (erro: any) {
-//         console.log(erro.message)
-//         return res.status(500).json({ mensagem: "2Erro interno do servidor" });
-//     }
-// };
-
-
 export {
     validarCamposBody,
     validarLogin,
     emailExiste,
     usuarioLogado,
-    // cpfExiste,
     cpfValido
 }

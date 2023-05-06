@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import knex from '../conexao';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { viaCepApi } from '../Config/APIs';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
@@ -44,7 +45,7 @@ const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaProm
 
         return res.status(200).json(usuarioSemSenha)
 
-    } catch (error) {
+    } catch (error: any) {
         return res.status(200).json({ mensagem: "Erro interno de servidor" })
     }
 };
@@ -81,12 +82,33 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
                 cpfFormatado += item
             }
         }
-        let cpfSanitizado: number = parseInt(cpfFormatado)
-        await knex('clientes').insert({ nome, email, cpf: cpfSanitizado, cep, rua, numero, bairro, cidade, estado });
-        return res.status(201).send({ mensagem: "cliente cadastrado" });
+        let cpfNumerico: number = parseInt(cpfFormatado)
+
+        let dadosCliene = { nome, email, cpf: cpfNumerico, cep, rua, numero, bairro, cidade, estado }
+
+        if (estado != "") {
+            if (estado.length != 1) {
+                return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
+            }
+        }
+        let cepFormatado: string = ""
+        if (cep != "") {
+            let cepArray: string[] = cep.split("")
+            for (let item of cepArray) {
+                if (item >= "0" && item <= "9") {
+                    cepFormatado += item
+                }
+            }
+            if (cepFormatado.length != 8) {
+                return res.status(400).json({ mensagem: "CEP inválido. verifique os dados inseridos e tente novamente!" })
+            }
+            let { data } = await viaCepApi.get(`/${cepFormatado}/json`)
+            dadosCliene = { nome, email, cpf: cpfNumerico, cep: data.cep.replace("-", ""), rua: data.logradouro, numero, bairro: data.bairro, cidade: data.localidade, estado: data.uf }
+        }
+        await knex('clientes').insert(dadosCliene);
+        return res.status(201).json({ mensagem: "cliente cadastrado" });
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
-
     }
 }
 
