@@ -174,7 +174,17 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
     } catch (error: any) {
         return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
-};
+}
+
+const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
+    let idCliente: string = req.params.id
+    try {
+        const consulta = await knex('clientes').where({ id: idCliente });
+        return res.status(200).json(consulta)
+    } catch (error: any) {
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
+    }
+}
 
 export {
     cadastrarUsuario,
@@ -184,5 +194,6 @@ export {
     listarCategorias,
     cadastraCliente,
     AlteraCadastraCliente,
-    listarClientes
+    listarClientes,
+    detalhaCliente
 }
