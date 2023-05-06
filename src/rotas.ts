@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
-import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario, listarCategorias, cadastraCliente } from './controladores/controladores';
-import { emailExiste, usuarioLogado, validarCamposBody, validarLogin, cpfExiste, cpfValido } from './middleware/validacoes'
+import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario, listarCategorias, cadastraCliente, AlteraCadastraCliente } from './controladores/controladores';
+import { emailExiste, usuarioLogado, validarCamposBody, validarLogin, cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/validacoes'
 import { schemaCadastroUsuario, schemaLogin, schemaCadastroCliente } from './middleware/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../swagger.json';
@@ -14,6 +14,7 @@ rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 rotas.use(usuarioLogado)
 rotas.get('/usuario', inspecionarUsuario)
 rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false, 'usuarios'), editarUsuario)
-rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(false, 'clientes'), cpfValido(false), cadastraCliente)
+rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(false, 'clientes'), cpfValido, cpfExistente(false), cadastraCliente)
+rotas.put('/cliente/:id', validarCamposBody(schemaCadastroCliente), cpfValido, validaAlteracaoCliente, AlteraCadastraCliente)
 
 export default rotas;

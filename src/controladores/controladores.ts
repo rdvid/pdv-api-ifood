@@ -82,9 +82,9 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
                 cpfFormatado += item
             }
         }
-        let cpfNumerico: number = parseInt(cpfFormatado)
+        // let cpfNumerico: number = parseInt(cpfFormatado)
 
-        let dadosCliene = { nome, email, cpf: cpfNumerico, cep, rua, numero, bairro, cidade, estado }
+        let dadosCliene = { nome, email, cpf: cpfFormatado, cep, rua, numero, bairro, cidade, estado }
 
         if (estado != "") {
             if (estado.length != 1) {
@@ -103,7 +103,7 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
                 return res.status(400).json({ mensagem: "CEP inválido. verifique os dados inseridos e tente novamente!" })
             }
             let { data } = await viaCepApi.get(`/${cepFormatado}/json`)
-            dadosCliene = { nome, email, cpf: cpfNumerico, cep: data.cep.replace("-", ""), rua: data.logradouro, numero, bairro: data.bairro, cidade: data.localidade, estado: data.uf }
+            dadosCliene = { nome, email, cpf: cpfFormatado, cep: data.cep.replace("-", ""), rua: data.logradouro, numero, bairro: data.bairro, cidade: data.localidade, estado: data.uf }
         }
         await knex('clientes').insert(dadosCliene);
         return res.status(201).json({ mensagem: "cliente cadastrado" });
@@ -112,11 +112,68 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
     }
 }
 
+const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaPromise => {
+    try {
+        let idCliente: string = req.params.id
+        let { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string, estado: string, } = req.body
+        let cpfarray: string[] = cpf.split("")
+        let cpfFormatado: string = ""
+        for (let item of cpfarray) {
+            if (item >= "0" && item <= "9") {
+                cpfFormatado += item
+            }
+        }
+        let cepFormatado: string = ""
+        if (cep != "") {
+            let cepArray: string[] = cep.split("")
+            for (let item of cepArray) {
+                if (item >= "0" && item <= "9") {
+                    cepFormatado += item
+                }
+            }
+            if (cepFormatado.length != 8) {
+                return res.status(400).json({ mensagem: "CEP inválido. verifique os dados inseridos e tente novamente!" })
+            }
+        }
+        if (estado != "") {
+            if (estado.length != 1) {
+                return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
+            }
+        }
+        if (cep == "") {
+            cep = null
+        }
+        if (rua == "") {
+            rua = null
+        }
+        if (numero == "") {
+            numero = null
+        }
+        if (bairro == "") {
+            bairro = null
+        }
+        if (cidade == "") {
+            cidade = null
+        }
+        if (estado == "") {
+            estado = null
+        }
+
+        await knex('clientes').update({ nome, email, cpf: cpfFormatado, cep: cepFormatado, rua, numero, bairro, cidade, estado }).where({ 'id': idCliente })
+        return res.status(201).json({ mensagem: "Dados alterados com sucesso" })
+    } catch (erro: any) {
+        console.log(erro.message)
+        return res.status(500).json({ mensagem: "1Erro interno do servidor" })
+    }
+}
+
+
 export {
     cadastrarUsuario,
     login,
     inspecionarUsuario,
     editarUsuario,
     listarCategorias,
-    cadastraCliente
+    cadastraCliente,
+    AlteraCadastraCliente
 }

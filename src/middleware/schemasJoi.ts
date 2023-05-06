@@ -31,7 +31,7 @@ const schemaCadastroCliente = Joi.object({
         'any.required': 'O campo email é obrigatório!',
         'string.email': 'O valor informado não é um e-mail válido'
     }),
-    cpf: Joi.required().messages({
+    cpf: Joi.string().required().messages({
         'any.required': 'O campo cpf é obrigatório!'
     }),
     cep: Joi.required().messages({

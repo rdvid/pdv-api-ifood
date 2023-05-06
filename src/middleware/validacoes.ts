@@ -52,7 +52,7 @@ const emailExiste = (vlrEsperado: boolean, tabela: string) => async (req: Reques
         }
 
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "1Erro interno do servidor" });
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 };
 
@@ -81,7 +81,7 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
 
 }
 
-const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
+const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
     const { cpf }: { cpf: string } = req.body
     const textoDeRetorno: string = "CPF inválido. verifique os dados inseridos e tente novamente!"
     try {
@@ -118,8 +118,37 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
         resto = (soma * 10) % 11
         if ((resto == 10) || (resto == 11)) resto = 0
         if (resto != parseInt(cpfFormatado.substring(10, 11)))
-            return res.status(400).json({ mensagem: "5" + textoDeRetorno })
+            return res.status(400).json({ mensagem: textoDeRetorno })
+        next()
+        // const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpfFormatado }).first();
 
+        // if (cpfExists === vlrEsperado) {
+        //     next();
+        // } else {
+
+        //     if (cpfExists) {
+        //         return res.status(409).json({ mensagem: "Não é possível prosseguir, o cpf informado já existe em nossa base de dados!" });
+        //     };
+
+        //     if (!cpfExists) {
+        //         return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
+        //     }
+        // }
+    } catch (erro: any) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
+    }
+}
+
+const cpfExistente = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
+    const { cpf }: { cpf: string } = req.body
+    let cpfarray: string[] = cpf.split("")
+    let cpfFormatado: string = ""
+    for (let item of cpfarray) {
+        if (item >= "0" && item <= "9") {
+            cpfFormatado += item
+        }
+    }
+    try {
         const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpfFormatado }).first();
 
         if (cpfExists === vlrEsperado) {
@@ -135,7 +164,42 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
             }
         }
     } catch (erro: any) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
+    }
+}
+const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const idCliente: string = req.params.id
+        const { email, cpf }: { email: string, cpf: string } = req.body
+
+        let cpfarray: string[] = cpf.split("")
+        let cpfFormatado: string = ""
+        for (let item of cpfarray) {
+            if (item >= "0" && item <= "9") {
+                cpfFormatado += item
+            }
+        }
+
+        const dadosCliente = await knex('clientes').select('*').where({ 'id': idCliente })
+
+        if (!dadosCliente[0]) {
+            return res.status(404).json({ mensagem: "Cliente não encontrado, favor verificar o Id informado" })
+        }
+        if (email != dadosCliente[0].email) {
+            const emailExiste: boolean = !!await knex('clientes').select('*').where({ email: email }).first()
+            if (emailExiste) {
+                return res.status(409).json({ mensagem: "Não é possível prosseguir, o e-mail informado já existe em nossa base de dados!" });
+            }
+        }
+        if (cpfFormatado != dadosCliente[0].cpf) {
+            const cpfExiste: boolean = !!await knex('clientes').select('*').where({ cpf: cpfFormatado }).first()
+            if (cpfExiste) {
+                return res.status(409).json({ mensagem: "Não é possível prosseguir, o CPF informado já existe em nossa base de dados!" });
+            }
+        }
+        next()
+    } catch (erro: any) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
 
@@ -144,5 +208,7 @@ export {
     validarLogin,
     emailExiste,
     usuarioLogado,
-    cpfValido
+    cpfValido,
+    cpfExistente,
+    validaAlteracaoCliente
 }
