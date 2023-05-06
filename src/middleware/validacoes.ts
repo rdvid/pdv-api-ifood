@@ -92,7 +92,7 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
             return res.status(400).json({ mensagem: "1" + textoDeRetorno })
         }
         let soma = 0
-        let resto
+        let resto: number
         let cpfarray: string[] = cpf.split("")
         let cpfFormatado: string = ""
         for (let item of cpfarray) {
@@ -134,7 +134,6 @@ const cpfValido = (vlrEsperado: boolean) => async (req: Request, res: Response, 
                 return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
             }
         }
-        next()
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }

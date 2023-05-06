@@ -11,9 +11,9 @@ interface DBConfig {
         user: string;
         password: string;
         database: string;
-        ssl: {
-            rejectUnauthorized?: boolean;
-        };
+        // ssl: {
+        //     rejectUnauthorized?: boolean;
+        // };
     };
 }
 
