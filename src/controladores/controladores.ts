@@ -4,6 +4,7 @@ import knex from '../conexao';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { viaCepApi } from '../Config/APIs';
+import { AnyARecord } from 'dns';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
@@ -115,7 +116,7 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
 const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         let idCliente: string = req.params.id
-        let { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string, estado: string, } = req.body
+        let { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: any, email: any, cpf: any, cep: any, rua: any, numero: any, bairro: any, cidade: any, estado: any, } = req.body
         let cpfarray: string[] = cpf.split("")
         let cpfFormatado: string = ""
         for (let item of cpfarray) {
@@ -123,7 +124,7 @@ const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaP
                 cpfFormatado += item
             }
         }
-        let cepFormatado: string = ""
+        let cepFormatado: any = ""
         if (cep != "") {
             let cepArray: string[] = cep.split("")
             for (let item of cepArray) {
@@ -141,7 +142,7 @@ const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaP
             }
         }
         if (cep == "") {
-            cep = null
+            cepFormatado = null
         }
         if (rua == "") {
             rua = null
@@ -163,10 +164,17 @@ const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaP
         return res.status(201).json({ mensagem: "Dados alterados com sucesso" })
     } catch (erro: any) {
         console.log(erro.message)
-        return res.status(500).json({ mensagem: "1Erro interno do servidor" })
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
-
+const listarClientes = async (req: Request, res: Response): tipoRespostaPromise => {
+    try {
+        const consulta = await knex('clientes');
+        return res.status(200).json(consulta)
+    } catch (error: any) {
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
+    }
+};
 
 export {
     cadastrarUsuario,
@@ -175,5 +183,6 @@ export {
     editarUsuario,
     listarCategorias,
     cadastraCliente,
-    AlteraCadastraCliente
+    AlteraCadastraCliente,
+    listarClientes
 }
