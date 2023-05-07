@@ -120,20 +120,6 @@ const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
         if (resto != parseInt(cpfFormatado.substring(10, 11)))
             return res.status(400).json({ mensagem: textoDeRetorno })
         next()
-        // const cpfExists: boolean = !!await knex('clientes').select('*').where({ cpf: cpfFormatado }).first();
-
-        // if (cpfExists === vlrEsperado) {
-        //     next();
-        // } else {
-
-        //     if (cpfExists) {
-        //         return res.status(409).json({ mensagem: "Não é possível prosseguir, o cpf informado já existe em nossa base de dados!" });
-        //     };
-
-        //     if (!cpfExists) {
-        //         return res.status(401).json({ mensagem: "O usuário informado não foi encontrado, verifique os dados e tente novamente!" });
-        //     }
-        // }
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
@@ -180,18 +166,18 @@ const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFun
             }
         }
 
-        const dadosCliente = await knex('clientes').select('*').where({ 'id': idCliente })
+        const dadosCliente = await knex('clientes').select('*').where({ 'id': idCliente }).first()
 
-        if (!dadosCliente[0]) {
+        if (!dadosCliente) {
             return res.status(404).json({ mensagem: "Cliente não encontrado, favor verificar o Id informado" })
         }
-        if (email != dadosCliente[0].email) {
+        if (email != dadosCliente.email) {
             const emailExiste: boolean = !!await knex('clientes').select('*').where({ email: email }).first()
             if (emailExiste) {
                 return res.status(409).json({ mensagem: "Não é possível prosseguir, o e-mail informado já existe em nossa base de dados!" });
             }
         }
-        if (cpfFormatado != dadosCliente[0].cpf) {
+        if (cpfFormatado != dadosCliente.cpf) {
             const cpfExiste: boolean = !!await knex('clientes').select('*').where({ cpf: cpfFormatado }).first()
             if (cpfExiste) {
                 return res.status(409).json({ mensagem: "Não é possível prosseguir, o CPF informado já existe em nossa base de dados!" });
