@@ -421,24 +421,45 @@ test('GET /cliente sem token retorna status 401', async () => {
     .set('Authorization', '') // cabeçalho Authorization sem o token
   expect(response.status).toBe(401);
 });
-
 test('GET /cliente com token inválido ou expirado retorna status 500', async () => {
   const response = await request(server)
     .get('/cliente')
     .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ`) //cabeçalho Authorization com o token inexistente
   expect(response.status).toBe(500);
 });
-
 test('GET /cliente com token ativo retorna status 200', async () => {
   const response = await request(server)
     .get('/cliente')
     .set('Authorization', `Bearer ${token}`) // cabeçalho Authorization com o token funcional
   expect(response.status).toBe(200);
 });
-
-test('GET /cliente lista todos os clientes cadastradas no banco de dados', async () => {
+test('GET /cliente/:id retorna um cliente especifico cadastrado no banco de dados', async () => {
   const response = await request(server)
-    .get('/cliente')
+    .get('/cliente/:id')
     .set('Authorization', `Bearer ${token}`) // cabeçalho Authorization com o token funcional
   expect(response.status).toBe(200);
+});
+test('GET /cliente/:id sem token retorna status 401', async () => {
+  const response = await request(server)
+    .get('/cliente/:id')
+    .set('Authorization', '') // cabeçalho Authorization sem o token
+  expect(response.status).toBe(401);
+});
+test('GET /cliente/:id com token inválido ou expirado retorna status 500', async () => {
+  const response = await request(server)
+    .get('/cliente/:id')
+    .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ`) //cabeçalho Authorization com o token inexistente
+  expect(response.status).toBe(500);
+});
+test('GET /cliente/:id com token ativo retorna status 200', async () => {
+  const response = await request(server)
+    .get('/cliente/:id')
+    .set('Authorization', `Bearer ${token}`) // cabeçalho Authorization com o token funcional
+  expect(response.status).toBe(200);
+});
+test('GET /cliente/:id detalha um cliente especifico cadastrado no banco de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/:id')
+    .set('Authorization', `Bearer ${token}`) // Id inexistente na base de dados
+  expect(response.status).toBe(404);
 });

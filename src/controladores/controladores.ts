@@ -163,7 +163,6 @@ const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaP
         await knex('clientes').update({ nome, email, cpf: cpfFormatado, cep: cepFormatado, rua, numero, bairro, cidade, estado }).where({ 'id': idCliente })
         return res.status(201).json({ mensagem: "Dados alterados com sucesso" })
     } catch (erro: any) {
-        console.log(erro.message)
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
@@ -179,8 +178,11 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
 const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     let idCliente: string = req.params.id
     try {
-        const consulta = await knex('clientes').where({ id: idCliente });
-        return res.status(200).json(consulta)
+        const consulta = await knex('clientes').where({ id: idCliente })
+        if (!consulta[0]) {
+            return res.status(404).json({ mensagem: "Não existe cliente cadastrado para o id informado" })
+        }
+        return res.status(200).json(consulta[0])
     } catch (error: any) {
         return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
