@@ -1,7 +1,11 @@
 import express, { Router } from 'express';
-import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario, listarCategorias, cadastraCliente, AlteraCadastraCliente, listarClientes, detalhaCliente, deletaCliente } from './controladores/controladores';
-import { emailExiste, usuarioLogado, validarCamposBody, validarLogin, cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/validacoes'
-import { schemaCadastroUsuario, schemaLogin, schemaCadastroCliente } from './middleware/schemasJoi'
+import { listarCategorias, listarProdutos, adicionarProduto, detalharProduto, editarProduto, deletarProduto } from './controladores/produtos';
+import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario } from './controladores/usuarios'
+import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraCadastraCliente } from './controladores/controladores';
+import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
+import { produtoExiste, categoriaExiste } from './middleware/produtos'
+import { cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/clientes';
+import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente } from './schemas/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../swagger.json';
 
@@ -19,5 +23,11 @@ rotas.put('/cliente/:id', validarCamposBody(schemaCadastroCliente), cpfValido, v
 rotas.get('/cliente', listarClientes)
 rotas.get('/cliente/:id', detalhaCliente)
 rotas.delete('/cliente/delete', deletaCliente)
+//criar , listar
+rotas.get('/produto', listarProdutos)
+rotas.get('/produto/:id', produtoExiste, detalharProduto)
+rotas.post('/produto', validarCamposBody(schemaCadastroProduto), categoriaExiste, adicionarProduto)
+rotas.put('/produto/:id',produtoExiste, validarCamposBody(schemaCadastroProduto), categoriaExiste,  editarProduto)
+rotas.delete('/produto/:id', produtoExiste, deletarProduto)
 
 export default rotas;

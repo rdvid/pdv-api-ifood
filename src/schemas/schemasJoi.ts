@@ -55,8 +55,11 @@ const schemaCadastroCliente = Joi.object({
 });
 
 
+
+
 export {
     schemaCadastroUsuario,
     schemaLogin,
-    schemaCadastroCliente
+    schemaCadastroCliente,
+    schemaCadastroProduto
 }

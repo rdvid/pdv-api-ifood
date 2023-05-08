@@ -176,7 +176,6 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
 const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     let idCliente: string = req.params.id
     const { id } = await knex('clientes').orderBy('id', 'desc').first()
-    console.log(id)
     try {
         const consulta = await knex('clientes').where({ id: idCliente })
         if (!consulta[0]) {
@@ -197,11 +196,6 @@ const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise =
 }
 
 export {
-    cadastrarUsuario,
-    login,
-    inspecionarUsuario,
-    editarUsuario,
-    listarCategorias,
     cadastraCliente,
     AlteraCadastraCliente,
     listarClientes,
