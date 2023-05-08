@@ -187,6 +187,14 @@ const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise 
         return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 }
+const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
+    try {
+        const deletar = await knex('clientes').delete()
+        return res.send()
+    } catch (erro: any) {
+        return res.status(500).json({ mensagem: "Erro intern do servidor" })
+    }
+}
 
 export {
     cadastrarUsuario,
@@ -197,5 +205,6 @@ export {
     cadastraCliente,
     AlteraCadastraCliente,
     listarClientes,
-    detalhaCliente
+    detalhaCliente,
+    deletaCliente
 }

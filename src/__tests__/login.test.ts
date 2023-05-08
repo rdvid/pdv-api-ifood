@@ -193,12 +193,19 @@ test('POST /cliente - Cadastro de clientes deve retornar status 400 ao enviar um
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "", cep: "", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cpf vazio
   expect(response.status).toBe(400);
 });
-test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição inválido', async () => {
+test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição incompleto', async () => {
   const response = await request(server)
     .post('/cliente')
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cpf com pontos e traço
   expect(response.status).toBe(201);
 });
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
+});
+
 test('POST /cliente - Cadastro de clientes deve retornar status 400 ao enviar um corpo de requisição inválido', async () => {
   const response = await request(server)
     .post('/cliente')
@@ -217,11 +224,23 @@ test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cep vazio
   expect(response.status).toBe(201);
 });
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
+});
 test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição com dados faltando', async () => {
   const response = await request(server)
     .post('/cliente')
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "88.034-354", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cep preenchido com ponto e traço
   expect(response.status).toBe(201);
+});
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
 });
 test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição com dados faltando', async () => {
   const response = await request(server)
@@ -229,11 +248,23 @@ test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "88.030-300", rua: "", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo rua vazio
   expect(response.status).toBe(201);
 });
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
+});
 test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição com dados faltando', async () => {
   const response = await request(server)
     .post('/cliente')
-    .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "", rua: "88.030-300", numero: "", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo numero vazio
+    .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "", rua: "88.030-300", numero: "", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo número vazio
   expect(response.status).toBe(201);
+});
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
 });
 test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição com dados faltando', async () => {
   const response = await request(server)
@@ -241,11 +272,23 @@ test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "88.030-300", rua: "João Paulo", numero: "25", bairro: "", cidade: "", estado: "" }); // com o campo bairro vazio
   expect(response.status).toBe(201);
 });
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
+});
 test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um corpo de requisição com dados faltando', async () => {
   const response = await request(server)
     .post('/cliente')
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "88.030-300", rua: "", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cidade vazio
   expect(response.status).toBe(201);
+});
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
 });
 test('POST /cliente - Cadastro de clientes deve retornar status 400 ao enviar um corpo de requisição inválido', async () => {
   const response = await request(server)
@@ -402,6 +445,12 @@ test('PUT /cliente/:id - Alteração do cadastro de clientes deve retornar statu
     .put('/cliente/:id')
     .send({ nome: "Wladimir", email: "coelho.silva@gmiil.com", cpf: "567.444.789-87", cep: "", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo estado vazio
   expect(response.status).toBe(201);
+});
+test('GET /cliente/delete limpa a base de dados', async () => {
+  const response = await request(server)
+    .get('/cliente/delete')
+    .set('Authorization', `Bearer ${token}`) // limpa a base de dados
+  expect(response.status).toBe(200);
 });
 test('PUT /cliente/:id - Alteração do cadastro de clientes deve retornar status 404 ao enviar um corpo de requisição inválido', async () => {
   const response = await request(server)

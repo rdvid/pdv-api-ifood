@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario, listarCategorias, cadastraCliente, AlteraCadastraCliente, listarClientes, detalhaCliente } from './controladores/controladores';
+import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario, listarCategorias, cadastraCliente, AlteraCadastraCliente, listarClientes, detalhaCliente, deletaCliente } from './controladores/controladores';
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin, cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/validacoes'
 import { schemaCadastroUsuario, schemaLogin, schemaCadastroCliente } from './middleware/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
@@ -18,5 +18,6 @@ rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(fal
 rotas.put('/cliente/:id', validarCamposBody(schemaCadastroCliente), cpfValido, validaAlteracaoCliente, AlteraCadastraCliente)
 rotas.get('/cliente', listarClientes)
 rotas.get('/cliente/:id', detalhaCliente)
+rotas.delete('/cliente/delete', deletaCliente)
 
 export default rotas;
