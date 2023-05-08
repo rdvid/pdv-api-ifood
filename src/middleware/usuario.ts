@@ -12,7 +12,7 @@ const validarCamposBody = (joiSchema: ObjectSchema) => async (req: Request, res:
         await joiSchema.validateAsync(req.body)
         next();
     } catch (error: any) {
-        return res.status(400).json({ mensagem: error.message });
+        return res.status(500).json({ mensagem: error.message });
     }
 };
 

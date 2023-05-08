@@ -79,6 +79,7 @@ const cpfExistente = (vlrEsperado: boolean) => async (req: Request, res: Respons
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
+
 const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const idCliente: string = req.params.id

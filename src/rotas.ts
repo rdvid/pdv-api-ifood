@@ -18,11 +18,12 @@ rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 rotas.use(usuarioLogado)
 rotas.get('/usuario', inspecionarUsuario)
 rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false, 'usuarios'), editarUsuario)
+//cliente
 rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(false, 'clientes'), cpfValido, cpfExistente(false), cadastraCliente)
 rotas.put('/cliente/:id', validarCamposBody(schemaCadastroCliente), cpfValido, validaAlteracaoCliente, AlteraCadastraCliente)
 rotas.get('/cliente', listarClientes)
 rotas.get('/cliente/:id', detalhaCliente)
-rotas.delete('/cliente/delete', deletaCliente)
+rotas.delete('/cliente/:id', deletaCliente)
 //criar , listar
 rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', produtoExiste, detalharProduto)

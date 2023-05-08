@@ -85,12 +85,14 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
         }
         let dadosCliene = { nome, email, cpf: cpfFormatado, cep, rua, numero, bairro, cidade, estado }
 
-        if (estado != "") {
-            if (estado.length != 1) {
+        if (estado) {
+            if (estado.length != 2) {
                 return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
             }
         }
+
         let cepFormatado: string = ""
+        
         if (cep != "") {
             let cepArray: string[] = cep.split("")
             for (let item of cepArray) {
@@ -135,7 +137,7 @@ const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaP
             }
         }
         if (estado != "") {
-            if (estado.length != 1) {
+            if (estado.length != 2) {
                 return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
             }
         }
@@ -175,7 +177,6 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
 
 const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     let idCliente: string = req.params.id
-    const { id } = await knex('clientes').orderBy('id', 'desc').first()
     try {
         const consulta = await knex('clientes').where({ id: idCliente })
         if (!consulta[0]) {
@@ -188,10 +189,15 @@ const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise 
 }
 const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
-        const deletar = await knex('clientes').delete()
-        return res.send()
+        const { id } = req.params
+        const clienteExiste = await knex('clientes').where({id: id}).first()
+        if(!clienteExiste){
+            return res.status(404).json({ mensagem: "cliente não encontrado"})
+        }
+        await knex('clientes').delete().where({id: id})
+        return res.status(204).send()
     } catch (erro: any) {
-        return res.status(500).json({ mensagem: "Erro intern do servidor" })
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
 
