@@ -37,16 +37,15 @@ const login = async (req: Request, res: Response): tipoRespostaPromise => {
 const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
     const token: string = req.headers.authorization?.split(" ")[1] as string
     const { usuario } = jwt.decode(token) as JwtPayload
-
     try {
 
         let usuarioRetornado = await knex('usuarios').where({ id: usuario }).first()
-        const { senha: _, ...usuarioSemSenha } = usuarioRetornado[0]
+        const { senha: _, ...usuarioSemSenha } = usuarioRetornado
 
         return res.status(200).json(usuarioSemSenha)
 
     } catch (error) {
-        return res.status(200).json({ mensagem: "Erro interno de servidor" })
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 };
 
