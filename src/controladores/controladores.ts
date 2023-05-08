@@ -83,8 +83,6 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
                 cpfFormatado += item
             }
         }
-        // let cpfNumerico: number = parseInt(cpfFormatado)
-
         let dadosCliene = { nome, email, cpf: cpfFormatado, cep, rua, numero, bairro, cidade, estado }
 
         if (estado != "") {
@@ -177,6 +175,8 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
 
 const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     let idCliente: string = req.params.id
+    const { id } = await knex('clientes').orderBy('id', 'desc').first()
+    console.log(id)
     try {
         const consulta = await knex('clientes').where({ id: idCliente })
         if (!consulta[0]) {
