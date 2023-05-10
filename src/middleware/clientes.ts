@@ -1,11 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { ObjectSchema, string } from 'joi';
 import knex from '../conexao'
-import bcrypt from 'bcrypt';
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
 import dotenv from 'dotenv';
 dotenv.config();
-const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
 const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
     const { cpf }: { cpf: string } = req.body
@@ -49,7 +45,7 @@ const cpfValido = async (req: Request, res: Response, next: NextFunction) => {
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
-}
+};
 
 const cpfExistente = (vlrEsperado: boolean) => async (req: Request, res: Response, next: NextFunction) => {
     const { cpf }: { cpf: string } = req.body
@@ -78,7 +74,7 @@ const cpfExistente = (vlrEsperado: boolean) => async (req: Request, res: Respons
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
-}
+};
 
 const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -92,7 +88,7 @@ const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFun
                 cpfFormatado += item
             }
         }
-
+        
         const dadosCliente = await knex('clientes').select('*').where({ 'id': idCliente }).first()
 
         if (!dadosCliente) {
@@ -114,7 +110,7 @@ const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFun
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
-}
+};
 
 export {
     cpfValido,

@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
 import { listarCategorias, listarProdutos, adicionarProduto, detalharProduto, editarProduto, deletarProduto } from './controladores/produtos';
 import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario } from './controladores/usuarios'
-import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraCadastraCliente } from './controladores/controladores';
+import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraCadastraCliente } from './controladores/clientes';
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
-import { produtoExiste, categoriaExiste } from './middleware/produtos'
+import { produtoExiste, categoriaExiste, verificaValor } from './middleware/produtos'
 import { cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/clientes';
 import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente } from './schemas/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
@@ -27,8 +27,8 @@ rotas.delete('/cliente/:id', deletaCliente)
 //criar , listar
 rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', produtoExiste, detalharProduto)
-rotas.post('/produto', validarCamposBody(schemaCadastroProduto), categoriaExiste, adicionarProduto)
-rotas.put('/produto/:id',produtoExiste, validarCamposBody(schemaCadastroProduto), categoriaExiste,  editarProduto)
+rotas.post('/produto', validarCamposBody(schemaCadastroProduto), categoriaExiste, verificaValor, adicionarProduto)
+rotas.put('/produto/:id',produtoExiste, validarCamposBody(schemaCadastroProduto), categoriaExiste,  verificaValor, editarProduto)
 rotas.delete('/produto/:id', produtoExiste, deletarProduto)
 
 export default rotas;

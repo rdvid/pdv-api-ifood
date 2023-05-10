@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ObjectSchema, string } from 'joi';
+import { ObjectSchema } from 'joi';
 import knex from '../conexao'
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
@@ -79,7 +79,7 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
         return res.status(500).json({ mensagem: "Sua sessão expirou, realize o login novamente" })
     }
 
-}
+};
 
 
 

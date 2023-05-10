@@ -64,7 +64,7 @@ const schemaCadastroProduto = Joi.object({
     valor: Joi.number().required().messages({
         'any.required': 'O campo valor é obrigatório',
     }),
-    categoria: Joi.number().required().messages({
+    categoria_id: Joi.number().required().messages({
         'any.required': 'O campo categoria é obrigatório',
     })
 });

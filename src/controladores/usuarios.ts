@@ -5,7 +5,6 @@ import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
-
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
 const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
@@ -20,7 +19,7 @@ const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromis
 };
 
 const login = async (req: Request, res: Response): tipoRespostaPromise => {
-    const { email, senha }: { email: string, senha: string } = req.body
+    const { email }: { email: string} = req.body
     try {
         const usuario = await knex('usuarios').where({ email: email })
         const token = jwt.sign({ usuario: usuario[0].id }, senhaJwt, { expiresIn: "6h" })
@@ -35,18 +34,18 @@ const login = async (req: Request, res: Response): tipoRespostaPromise => {
 };
 
 const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
-    const token: string = req.headers.authorization?.split(" ")[1] as string
-    const { usuario } = jwt.decode(token) as JwtPayload
-
+    
     try {
-
+        const token: string = req.headers.authorization?.split(" ")[1] as string
+        const { usuario } = jwt.decode(token) as JwtPayload
+        
         let usuarioRetornado = await knex('usuarios').where({ id: usuario }).first()
-        const { senha: _, ...usuarioSemSenha } = usuarioRetornado[0]
+        const { senha: _, ...usuarioSemSenha } = usuarioRetornado
 
         return res.status(200).json(usuarioSemSenha)
 
     } catch (error) {
-        return res.status(200).json({ mensagem: "Erro interno de servidor" })
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 };
 
@@ -59,7 +58,7 @@ const editarUsuario = async (req: Request, res: Response): tipoRespostaPromise =
         await knex('usuarios').update({ nome, email, senha: senhaHash }).where({ id: usuario })
         return res.status(200).json({ mensagem: "usuario atualizado" })
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno de servidor2" })
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 };
 
