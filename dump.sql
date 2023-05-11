@@ -27,7 +27,7 @@ create table produtos(
     descricao text not null,
     quantidade_estoque int not null,
     valor int not null,
-    categoria int references categorias(id)
+    categoria_id int references categorias(id)
 );
 
 create table clientes(
@@ -41,4 +41,18 @@ create table clientes(
     bairro varchar,
     cidade varchar,
     estado char(2)
+);
+
+create table pedidos(
+    id serial primary key,
+    cliente_id int references clientes(id),
+    observacao text,
+    valor_total int
+);
+create table pedido_produtos(
+    id serial primary key,
+    pedido_id int references pedido(id),
+    produto_id int references produtos(id),
+    quantidade_produto integer not null,
+    valor_produto integer not null
 );

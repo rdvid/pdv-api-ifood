@@ -92,7 +92,7 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
         }
 
         let cepFormatado: string = ""
-        
+
         if (cep != "") {
             let cepArray: string[] = cep.split("")
             for (let item of cepArray) {
@@ -177,6 +177,8 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
 
 const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     let idCliente: string = req.params.id
+    const idteste = await knex('clientes').orderBy('id', 'desc').first()
+    console.log(idteste.id)
     try {
         const consulta = await knex('clientes').where({ id: idCliente })
         if (!consulta[0]) {
@@ -190,11 +192,11 @@ const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise 
 const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const { id } = req.params
-        const clienteExiste = await knex('clientes').where({id: id}).first()
-        if(!clienteExiste){
-            return res.status(404).json({ mensagem: "cliente não encontrado"})
+        const clienteExiste = await knex('clientes').where({ id: id }).first()
+        if (!clienteExiste) {
+            return res.status(404).json({ mensagem: "cliente não encontrado" })
         }
-        await knex('clientes').delete().where({id: id})
+        await knex('clientes').delete().where({ id: id })
         return res.status(204).send()
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
