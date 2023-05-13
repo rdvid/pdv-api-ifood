@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt"
 import dotenv from 'dotenv'
 import knex from '../conexao'
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
 dotenv.config()
 
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
-
+// return valid token
 const getValidToken = async () => {
     let usuario = await knex('usuarios').where({nome: 'teste'}).first()
 
@@ -14,7 +14,7 @@ const getValidToken = async () => {
         usuario = await knex('usuarios').where({nome: 'teste'}).first()
     }
 
-    return jwt.sign({ usuario: usuario.id }, senhaJwt, { expiresIn: "6h" })
+    return jwt.sign({ usuario: usuario.id }, senhaJwt, { expiresIn: "1h" })
 }
 
 const createUser = async (nome: string, email: string, senha: string ) => {

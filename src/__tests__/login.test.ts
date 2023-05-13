@@ -2,11 +2,14 @@ import request from 'supertest';
 import app from '../index';
 import http from 'http';
 import knex from '../conexao';
+import { getValidToken } from './__fixtures__'
+
 let server: http.Server;
 let token: string = ""
 
 beforeAll(async () => {
     server = app.listen(3003, () => {});
+    
 });
 
 afterAll(async () => {
