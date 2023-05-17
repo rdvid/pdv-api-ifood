@@ -27,12 +27,12 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
             const produto_id = pedido_produtos[i].produto_id
             const quantidade_produto: number = pedido_produtos[1].quantidade_produto
             const { valor, quantidade_estoque } = await knex('produtos').select('valor', 'quantidade_estoque').where({ id: produto_id }).first()
-            const registraProdutosPedido = await knex('pedido_produtos').insert({ pedido_id, produto_id, quantidade_produto, valor_produto: valor })
+            await knex('pedido_produtos').insert({ pedido_id, produto_id, quantidade_produto, valor_produto: valor })
             valor_total = valor_total + (valor * quantidade_produto)
             const novoEstoque = quantidade_estoque - quantidade_produto
-            const descontaEstoque = await knex('produtos').update({ quantidade_estoque: novoEstoque }).where({ id: produto_id })
+            await knex('produtos').update({ quantidade_estoque: novoEstoque }).where({ id: produto_id })
         }
-        const total = await knex('pedidos').update({ valor_total }).where({ id: pedido_id })
+        await knex('pedidos').update({ valor_total }).where({ id: pedido_id })
         const cliente = await knex('clientes').select('nome', 'email').where({ id: cliente_id }).first()
 
         const transportador = nodemailer.createTransport({

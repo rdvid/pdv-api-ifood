@@ -29,12 +29,12 @@ const listarProdutos = async (req: Request, res: Response): tipoRespostaPromise 
 
 const adicionarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
-        const { descricao, quantidade_estoque, valor, categoria }:
-            { descricao: string, quantidade_estoque: number, valor: number, categoria: number } = req.body;
+        const { descricao, quantidade_estoque, valor, categoria_id }:
+            { descricao: string, quantidade_estoque: number, valor: number, categoria_id: number } = req.body;
 
         const insert = await knex('produtos')
-            .insert({ descricao, quantidade_estoque, valor, categoria })
-            .returning(['descricao', 'quantidade_estoque', 'valor', 'categoria']);
+            .insert({ descricao, quantidade_estoque, valor, categoria_id })
+            .returning(['descricao', 'quantidade_estoque', 'valor', 'categoria_id']);
 
         return res.status(201).json(insert[0]);
 
