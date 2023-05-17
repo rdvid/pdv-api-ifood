@@ -34,8 +34,8 @@ create table clientes(
     id serial primary key,
     nome text not null,
     email varchar(100) unique not null,
-    cpf varchar(11) unique not null,
-    cep varchar(8),
+    cpf char(11) unique not null,
+    cep char(8),
     rua varchar,
     numero int, 
     bairro varchar,
@@ -51,7 +51,7 @@ create table pedidos(
 );
 create table pedido_produtos(
     id serial primary key,
-    pedido_id int references pedido(id),
+    pedido_id int references pedidos(id),
     produto_id int references produtos(id),
     quantidade_produto integer not null,
     valor_produto integer not null

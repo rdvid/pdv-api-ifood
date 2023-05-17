@@ -64,14 +64,36 @@ const schemaCadastroProduto = Joi.object({
     valor: Joi.number().required().messages({
         'any.required': 'O campo valor é obrigatório',
     }),
-    categoria: Joi.number().required().messages({
+    categoria_id: Joi.number().required().messages({
         'any.required': 'O campo categoria é obrigatório',
     })
 });
+
+const schemaCadastroPedido = Joi.object({
+    cliente_id: Joi.string().required().messages({
+        'any.required': 'O campo cliente_id é obrigatório'
+    }),
+    observacao: Joi.required().messages({
+        'any.required': 'O campo observação é obrigatório'
+    }),
+    pedido_produtos: Joi.array().required().messages({
+        'any.required': 'O campo pedido_produtos é obrigatório'
+    }),
+    pedido_produto: {
+        produto_id: Joi.string().required().messages({
+            'any.required': 'O campo produto_id é obrigatório'
+        }),
+        quantidade_produto: Joi.string().required().messages({
+            'any.required': 'O campo quantidade_produto é obrigatório'
+        })
+    }
+})
+
 
 export {
     schemaCadastroUsuario,
     schemaLogin,
     schemaCadastroCliente,
-    schemaCadastroProduto
+    schemaCadastroProduto,
+    schemaCadastroPedido
 }
