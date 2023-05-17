@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import dotenv from 'dotenv'
-import knex from '../conexao'
+import { knexSetup as knex } from '../conexao'
 import jwt, { Secret } from 'jsonwebtoken';
 dotenv.config()
 

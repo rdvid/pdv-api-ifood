@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import knex from 'knex';
-const { DB_CLIENT, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME } = process.env;
+import aws from 'aws-sdk';
+const { DB_CLIENT, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, ENDPOINT_S3, KEY_ID, APP_KEY } = process.env;
+const endpoint = new aws.Endpoint(`${ENDPOINT_S3}`)
 
 interface DBConfig {
     client: string;
@@ -31,5 +33,18 @@ const knexConfig: DBConfig = {
     },
 };
 
+const s3 = new aws.S3({
+    endpoint,
+    credentials: {
+        accessKeyId: `${KEY_ID}`,
+        secretAccessKey: `${APP_KEY}`
+    }
+})
 
-export default knex(knexConfig);
+const knexSetup = knex(knexConfig)
+
+export {
+    knexSetup,
+    s3
+}   
+    

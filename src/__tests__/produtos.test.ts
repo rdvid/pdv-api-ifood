@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../index';
 import http from 'http';
-import knex from '../conexao';
+import { knexSetup as knex } from '../conexao'
 import { getValidToken } from './__fixtures__'
 
 let server: http.Server;

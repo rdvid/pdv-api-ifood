@@ -1,5 +1,5 @@
 import { Request, Response, response } from 'express';
-import knex from '../conexao';
+import { knexSetup as knex } from '../conexao';
 import dotenv from 'dotenv';
 dotenv.config();
 
