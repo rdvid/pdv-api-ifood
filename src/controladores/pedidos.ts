@@ -13,6 +13,12 @@ interface PedidoProduto {
     observacao: string;
     pedido_produtos: Produto[]
 }
+interface Pedido {
+    id: number;
+    valor_total: number;
+    observacao: string;
+    cliente_id: string;
+}
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
@@ -62,19 +68,17 @@ const listaPedidos = async (req: Request, res: Response): tipoRespostaPromise =>
         if (!cliente_id) {
             let listaTodos = await knex('pedidos')
             for (let i = 0; i < listaTodos.length; i++) {
-                const order = listaTodos[i]
-                let produtosDoPedido = await knex('pedido_produtos').where({ pedido_id: order.id })
-                console.log(produtosDoPedido)
-                let objeto = { order, produtosDoPedido }
+                const pedido = listaTodos[i]
+                let pedido_produtos = await knex('pedido_produtos').where({ pedido_id: pedido.id })
+                let objeto = { pedido, pedido_produtos }
                 retorno.push(objeto)
             }
         } else {
-            let listaPorId = await knex('pedidos').where({ cliente_id })
+            const listaPorId = await knex('pedidos').select('id', 'valor_total', 'observacao', 'cliente_id').where({ cliente_id })
             for (let i = 0; i < listaPorId.length; i++) {
-                const order = listaPorId[i]
-                let produtosDoPedido = await knex('pedido_produtos').where({ pedido_id: order.id })
-                console.log(produtosDoPedido)
-                let objeto = { order, produtosDoPedido }
+                const pedido = listaPorId[i]
+                let pedido_produtos = await knex('pedido_produtos').select('id', 'quantidade_produto', 'valor_produto', 'pedido_id', 'produto_id').where({ pedido_id: pedido.id })
+                let objeto = { pedido, pedido_produtos }
                 retorno.push(objeto)
             }
         }
