@@ -14,3 +14,8 @@
 // com o campo quantidade_produto nullo
 // com quantidade_produto acima do estoque
 // dois produtos com o mesmo id no mesmo pedido no limite máximo da quantidade em estoque
+
+// caso não tenha nenhum pedido para o cliente informado
+// caso não seja informado id e não tenha nenhum pedido cadastrado
+// sem informar id
+// com pedidos existentes para o id informado

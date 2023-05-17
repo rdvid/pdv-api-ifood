@@ -1,10 +1,10 @@
 import { Request, Response, response } from 'express';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import knex from '../conexao';
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+// import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
-const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
+// const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
@@ -18,7 +18,7 @@ const listarCategorias = async (req: Request, res: Response): tipoRespostaPromis
 };
 
 const listarProdutos = async (req: Request, res: Response): tipoRespostaPromise => {
-    
+
     try {
         const consulta = await knex('produtos');
         return res.status(200).json(consulta)
@@ -28,55 +28,55 @@ const listarProdutos = async (req: Request, res: Response): tipoRespostaPromise 
 };
 
 const adicionarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
-    try {   
+    try {
         const { descricao, quantidade_estoque, valor, categoria }:
-        {descricao: string, quantidade_estoque: number, valor: number, categoria: number} = req.body;
-        
+            { descricao: string, quantidade_estoque: number, valor: number, categoria: number } = req.body;
+
         const insert = await knex('produtos')
-                            .insert( { descricao, quantidade_estoque, valor, categoria})
-                            .returning(['descricao', 'quantidade_estoque', 'valor', 'categoria']);
-        
+            .insert({ descricao, quantidade_estoque, valor, categoria })
+            .returning(['descricao', 'quantidade_estoque', 'valor', 'categoria']);
+
         return res.status(201).json(insert[0]);
 
-    } catch (error:any) {
-        return res.status(500).json({mensagem: "Erro interno no servidor."});
+    } catch (error: any) {
+        return res.status(500).json({ mensagem: "Erro interno no servidor." });
     }
 };
 
 const detalharProduto = async (req: Request, res: Response): tipoRespostaPromise => {
-    
+
     try {
         const { id } = req.params
-        const produto = await knex('produtos').where({id: id}).first()
+        const produto = await knex('produtos').where({ id: id }).first()
 
         return res.status(200).json(produto)
 
     } catch (error) {
-        return res.status(200).json({mensagem: 'Erro interno no servidor.'})
+        return res.status(200).json({ mensagem: 'Erro interno no servidor.' })
     }
 
 };
 
 const editarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const { descricao, quantidade_estoque, valor, categoria }:
-        {descricao: string, quantidade_estoque: number, valor: number, categoria: number} = req.body;
+            { descricao: string, quantidade_estoque: number, valor: number, categoria: number } = req.body;
 
-        const produto = await knex('produtos').update({descricao, quantidade_estoque, valor, categoria}).where({id: id})
-        return res.status(201).json({mensagem: "Produto atualizado."})
+        const produto = await knex('produtos').update({ descricao, quantidade_estoque, valor, categoria }).where({ id: id })
+        return res.status(201).json({ mensagem: "Produto atualizado." })
     } catch (error) {
-        return res.status(500).json({mensagem: 'Erro interno no servidor.'})
+        return res.status(500).json({ mensagem: 'Erro interno no servidor.' })
     }
 }
 
 const deletarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const { id } = req.params;
-        await knex('produtos').delete().where({id: id});
+        await knex('produtos').delete().where({ id: id });
         return res.status(204).json()
     } catch (error) {
-        return res.status(500).json({mensagem: 'Erro interno no servidor.'})
+        return res.status(500).json({ mensagem: 'Erro interno no servidor.' })
     }
 }
 

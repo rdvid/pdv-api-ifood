@@ -3,7 +3,7 @@ import { listarCategorias, listarProdutos, adicionarProduto, detalharProduto, ed
 import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario } from './controladores/usuarios'
 import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraCadastraCliente } from './controladores/clientes';
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
-import { produtoExiste, categoriaExiste } from './middleware/produtos'
+import { produtoExiste, categoriaExiste, validaDelecaoProduto } from './middleware/produtos'
 import { cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/clientes';
 import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente, schemaCadastroPedido } from './schemas/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
@@ -31,7 +31,7 @@ rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', produtoExiste, detalharProduto)
 rotas.post('/produto', validarCamposBody(schemaCadastroProduto), categoriaExiste, adicionarProduto)
 rotas.put('/produto/:id', produtoExiste, validarCamposBody(schemaCadastroProduto), categoriaExiste, editarProduto)
-rotas.delete('/produto/:id', produtoExiste, deletarProduto)
+rotas.delete('/produto/:id', produtoExiste, validaDelecaoProduto, deletarProduto)
 // pedido
 rotas.post('/pedido', validarCamposBody(schemaCadastroPedido), existeCliente_id, validaprodutos_pedido, cadastraPedido)
 rotas.get('/pedido', validaIdPedido, listaPedidos)

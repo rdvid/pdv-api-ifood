@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { ObjectSchema, string } from 'joi';
+// import { ObjectSchema, string } from 'joi';
 import knex from '../conexao'
-import bcrypt from 'bcrypt';
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
+// import bcrypt from 'bcrypt';
+// import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
 import dotenv from 'dotenv';
 dotenv.config();
-const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
+// const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
 const categoriaExiste = async (req: Request, res: Response, next: NextFunction) => {
     const { categoria_id } = req.body
@@ -39,7 +39,21 @@ const produtoExiste = async (req: Request, res: Response, next: NextFunction) =>
 
 }
 
+const validaDelecaoProduto = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        const constaEmPedido: Boolean = !!await knex('pedido_produtos').where({ produto_id: id }).first();
+        if (constaEmPedido) {
+            return res.status(400).json({ mensagem: "O produto não pode ser excluido pois esta vinculado a pedidos já registrados" })
+        }
+        next()
+    } catch (erro: any) {
+        return res.status(500).json({ mensagem: 'Erro interno no servidor.' })
+    }
+}
+
 export {
     categoriaExiste,
-    produtoExiste
+    produtoExiste,
+    validaDelecaoProduto
 }

@@ -13,12 +13,6 @@ interface PedidoProduto {
     observacao: string;
     pedido_produtos: Produto[]
 }
-interface Pedido {
-    id: number;
-    valor_total: number;
-    observacao: string;
-    cliente_id: string;
-}
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
@@ -81,6 +75,9 @@ const listaPedidos = async (req: Request, res: Response): tipoRespostaPromise =>
                 let objeto = { pedido, pedido_produtos }
                 retorno.push(objeto)
             }
+        }
+        if (retorno.length < 1) {
+            return res.status(200).json({ mensagem: 'Não existem pedidos cadastrados' })
         }
         return res.status(200).json(retorno)
     } catch (erro) {
