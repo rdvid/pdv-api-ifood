@@ -5,7 +5,7 @@ import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraC
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
 import { produtoExiste, categoriaExiste, verificaValor } from './middleware/produtos'
 import { cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/clientes';
-import { listarImagens } from './controladores/arquivos'
+import { listarImagens, cadastrarImagem, deletarImagem } from './controladores/arquivos'
 import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente } from './schemas/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../swagger.json';
@@ -33,7 +33,7 @@ rotas.put('/produto/:id',produtoExiste, validarCamposBody(schemaCadastroProduto)
 rotas.delete('/produto/:id', produtoExiste, deletarProduto)
 //upload
 rotas.get('/arquivos', listarImagens)
+rotas.post('/arquivo/upload', cadastrarImagem)
 
-
-
+rotas.delete('/arquivo/deletar', deletarImagem)
 export default rotas;
