@@ -25,7 +25,7 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
         let valor_total: number = 0
         for (let i: number = 0; i < pedido_produtos.length; i++) {
             const produto_id = pedido_produtos[i].produto_id
-            const quantidade_produto: number = pedido_produtos[1].quantidade_produto
+            const quantidade_produto: number = pedido_produtos[i].quantidade_produto
             const { valor, quantidade_estoque } = await knex('produtos').select('valor', 'quantidade_estoque').where({ id: produto_id }).first()
             await knex('pedido_produtos').insert({ pedido_id, produto_id, quantidade_produto, valor_produto: valor })
             valor_total = valor_total + (valor * quantidade_produto)
@@ -36,12 +36,12 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
         const cliente = await knex('clientes').select('nome', 'email').where({ id: cliente_id }).first()
 
         const transportador = nodemailer.createTransport({
-            service: 'gmail',
+            service: 'Gmail',
             auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
         });
         const email = {
             from: process.env.EMAIL_FROM,
-            to: `${cliente.email}`,
+            to: "wladimir12oliveira@gmail.com",
             subject: '👀 Hola ',
             template: "chegou o e-mail"
             // context: { "incident" }

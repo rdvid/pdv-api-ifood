@@ -47,7 +47,7 @@ const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise
     }
 }
 
-const AlteraCadastraCliente = async (req: Request, res: Response): tipoRespostaPromise => {
+const AlteraCadastroCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         let idCliente: string = req.params.id
         let { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: any, email: any, cpf: any, cep: any, rua: any, numero: any, bairro: any, cidade: any, estado: any, } = req.body
@@ -125,12 +125,15 @@ const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise 
 }
 const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
-        const { id } = req.params
-        const clienteExiste = await knex('clientes').where({ id: id }).first()
-        if (!clienteExiste) {
-            return res.status(404).json({ mensagem: "cliente não encontrado" })
-        }
-        await knex('clientes').delete().where({ id: id })
+        // rota criada especificamente para limpar a base de dados, não precisa where
+        // const { id } = req.params
+        // const clienteExiste = await knex('clientes').where({ id: id }).first()
+        // if (!clienteExiste) {
+        //     return res.status(404).json({ mensagem: "cliente não encontrado" })
+        // }
+        await knex('pedido_produtos').delete()
+        await knex('pedidos').delete()
+        await knex('clientes').delete() //.where({ id: id })
         return res.status(204).send()
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
@@ -139,7 +142,7 @@ const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise =
 
 export {
     cadastraCliente,
-    AlteraCadastraCliente,
+    AlteraCadastroCliente,
     listarClientes,
     detalhaCliente,
     deletaCliente

@@ -25,14 +25,17 @@ const schemaLogin = Joi.object({
 
 const schemaCadastroCliente = Joi.object({
     nome: Joi.string().required().messages({
-        'any.required': 'O campo nome é obrigatório!'
+        'any.required': 'O campo nome é obrigatório!',
+        'string.empty': 'O campo nome deve ser informado!',
     }),
     email: Joi.string().email().required().messages({
         'any.required': 'O campo email é obrigatório!',
+        'string.empty': 'O campo e-mail deve ser informado!',
         'string.email': 'O valor informado não é um e-mail válido'
     }),
     cpf: Joi.string().required().messages({
-        'any.required': 'O campo cpf é obrigatório!'
+        'any.required': 'O campo cpf é obrigatório!',
+        'string.empty': 'O campo cpf deve ser informado!',
     }),
     cep: Joi.required().messages({
         'any.required': 'O campo cep é obrigatório!'
@@ -71,7 +74,8 @@ const schemaCadastroProduto = Joi.object({
 
 const schemaCadastroPedido = Joi.object({
     cliente_id: Joi.string().required().messages({
-        'any.required': 'O campo cliente_id é obrigatório'
+        'any.required': 'O campo cliente_id é obrigatório',
+        'string.empty': 'O campo cliente_id deve ser informado!'
     }),
     observacao: Joi.required().messages({
         'any.required': 'O campo observação é obrigatório'
@@ -81,10 +85,12 @@ const schemaCadastroPedido = Joi.object({
     }),
     pedido_produto: {
         produto_id: Joi.string().required().messages({
-            'any.required': 'O campo produto_id é obrigatório'
+            'any.required': 'O campo produto_id é obrigatório',
+            'string.empty': 'O campo produto_id deve ser informado!'
         }),
         quantidade_produto: Joi.string().required().messages({
-            'any.required': 'O campo quantidade_produto é obrigatório'
+            'any.required': 'O campo quantidade_produto é obrigatório',
+            'string.empty': 'O campo quantidade_produto deve ser informado!'
         })
     }
 })

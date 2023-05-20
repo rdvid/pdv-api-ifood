@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import { listarCategorias, listarProdutos, adicionarProduto, detalharProduto, editarProduto, deletarProduto } from './controladores/produtos';
 import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario } from './controladores/usuarios'
-import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraCadastraCliente } from './controladores/clientes';
+import { listarClientes, detalhaCliente, cadastraCliente, AlteraCadastroCliente, deletaCliente } from './controladores/clientes';
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
 import { produtoExiste, categoriaExiste, validaDelecaoProduto } from './middleware/produtos'
 import { cpfValido, validaAlteracaoCliente, cpfExistente } from './middleware/clientes';
@@ -22,7 +22,7 @@ rotas.get('/usuario', inspecionarUsuario)
 rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false, 'usuarios'), editarUsuario)
 //cliente
 rotas.post('/cliente', validarCamposBody(schemaCadastroCliente), emailExiste(false, 'clientes'), cpfValido, cpfExistente(false), cadastraCliente)
-rotas.put('/cliente/:id', validarCamposBody(schemaCadastroCliente), cpfValido, validaAlteracaoCliente, AlteraCadastraCliente)
+rotas.put('/cliente/:id', validarCamposBody(schemaCadastroCliente), cpfValido, validaAlteracaoCliente, AlteraCadastroCliente)
 rotas.get('/cliente', listarClientes)
 rotas.get('/cliente/:id', detalhaCliente)
 rotas.delete('/cliente/:id', deletaCliente)
