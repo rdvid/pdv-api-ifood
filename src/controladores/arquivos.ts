@@ -51,7 +51,6 @@ const cadastrarImagem = async (req: Request, res:Response): tipoRespostaPromise 
 
 const deletarImagem = async (req: Request, res:Response): tipoRespostaPromise => {
     try {
-        
         await s3.deleteObject({
             Bucket: `${BACKBLAZE_BUCKET}`,
             Key: 'TESTE'

@@ -28,6 +28,7 @@ create table produtos(
     quantidade_estoque int not null,
     valor int not null,
     categoria_id int references categorias(id)
+    produto_imagem text
 );
 
 create table clientes(

@@ -10,7 +10,7 @@ const getValidToken = async () => {
     let usuario = await knex('usuarios').where({nome: 'teste'}).first()
 
     if(!usuario){
-        createUser('teste', 'teste@teste.com', 'teste');
+        await createUser('teste', 'teste@teste.com', 'teste');
         usuario = await knex('usuarios').where({nome: 'teste'}).first()
     }
 

@@ -8,7 +8,6 @@ let token: string = ""
 
 beforeAll(async () => {
     server = app.listen(3003, () => {});
-    
 });
 
 afterAll(async () => {

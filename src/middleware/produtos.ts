@@ -27,6 +27,8 @@ const produtoExiste = async (req: Request, res: Response, next: NextFunction) =>
             return res.status(404).json({mensagem: "Produto não encontrado."})
         }
 
+        req.body.produto_imagem = produto.produto_imagem
+    
         next();
         
     } catch (error) {
@@ -35,18 +37,7 @@ const produtoExiste = async (req: Request, res: Response, next: NextFunction) =>
 
 };
 
-
-const verificaValor = async (req: Request, res: Response, next: NextFunction) => {
-    const { valor } = req.body
-    if(parseInt(valor) <= 0){
-        return res.status(400).json({mensagem: "por favor, insira um valor válido."})
-    }
-
-    next();
-}
-
 export {
     categoriaExiste,
     produtoExiste,
-    verificaValor
 }

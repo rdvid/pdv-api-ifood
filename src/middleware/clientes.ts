@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { knexSetup as knex }from '../conexao'
+import { Cliente, Dict } from '../interfaces/interface';
+import { viaCepApi } from '../Config/APIs';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -112,8 +114,86 @@ const validaAlteracaoCliente = async (req: Request, res: Response, next: NextFun
     }
 };
 
+const validarCadastroDeCliente = async(req: Request, res:Response, next: NextFunction) => {
+    try {
+        const dadosObrigatorios = ['nome', 'cpf', 'email'];
+
+        let cpfarray: string[] = req.body.cpf.split("")
+        let cpfFormatado: string = ""
+        for (let item of cpfarray) {
+            if (item >= "0" && item <= "9") {
+                cpfFormatado += item
+            }
+        }
+        req.body.cpf = cpfFormatado
+
+        let dadosOpcionais:Dict[] = [];
+        for (const key in req.body){
+            if(!dadosObrigatorios.includes(key)){
+                dadosOpcionais.push({
+                    key,
+                    value: req.body[`${key}`]
+                });
+            }
+        }
+
+        for(let dado = 0; dado < dadosOpcionais.length; dado++){
+            if (dadosOpcionais[dado].key == 'estado') {
+                if (req.body.estado.length != 2) {
+                    return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
+                }
+            }
+
+            let cepFormatado: string = ""
+        
+            if (dadosOpcionais[dado].key == 'cep') {
+                let cepArray: string[] = req.body.cep.split("")
+                for (let item of cepArray) {
+                    if (item >= "0" && item <= "9") {
+                        cepFormatado += item
+                    }
+                }
+
+                if (cepFormatado.length != 8) {
+                    return res.status(400).json({ mensagem: "CEP inválido. verifique os dados inseridos e tente novamente!" })
+                }
+
+                let { data } = await viaCepApi.get(`/${cepFormatado}/json`)
+            
+                let { nome, email, numero, cpf } = req.body
+                
+                req.body.novoCliente = { 
+                    nome: nome, email: email, cpf, 
+                    cep: data.cep.replace("-", ""), 
+                    rua: data.logradouro, numero: numero, bairro: data.bairro, 
+                    cidade: data.localidade, estado: data.uf
+                }
+            }
+
+        }
+        console.log(req.body)
+        next();
+
+    } catch (error) {
+        return res.status(500).json({mensagem: "Erro interno do servidor."})
+    }
+
+}
+
+const verificaEnvioDeDadosOpcionais = (dados: string[]):string[] => {
+    let dadosRecebidos: string[] = []
+    for(let dado in dados){
+        if(dado){
+            dadosRecebidos.push(dado)
+        }
+    }
+
+    return dadosRecebidos
+}
+
 export {
     cpfValido,
     cpfExistente,
-    validaAlteracaoCliente
+    validaAlteracaoCliente, 
+    validarCadastroDeCliente
 }
