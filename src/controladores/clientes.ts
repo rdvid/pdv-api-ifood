@@ -112,7 +112,6 @@ const listarClientes = async (req: Request, res: Response): tipoRespostaPromise 
 const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     let idCliente: string = req.params.id
     const idteste = await knex('clientes').orderBy('id', 'desc').first()
-    console.log(idteste.id)
     try {
         const consulta = await knex('clientes').where({ id: idCliente })
         if (!consulta[0]) {

@@ -1,11 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-// import { ObjectSchema, string } from 'joi';
 import knex from '../conexao'
-// import bcrypt from 'bcrypt';
-// import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
-// import dotenv from 'dotenv';
-// dotenv.config();
-// const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
+
 
 const existeCliente_id = async (req: Request, res: Response, next: NextFunction) => {
     const { cliente_id }: { cliente_id: string } = req.body

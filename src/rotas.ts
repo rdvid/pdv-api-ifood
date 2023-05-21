@@ -34,6 +34,6 @@ rotas.put('/produto/:id', produtoExiste, validarCamposBody(schemaCadastroProduto
 rotas.delete('/produto/:id', produtoExiste, validaDelecaoProduto, deletarProduto)
 // pedido
 rotas.post('/pedido', validarCamposBody(schemaCadastroPedido), existeCliente_id, validaprodutos_pedido, cadastraPedido)
-rotas.get('/pedido', validaIdPedido, listaPedidos)
+rotas.get('/pedido/', validaIdPedido, listaPedidos)
 
 export default rotas;

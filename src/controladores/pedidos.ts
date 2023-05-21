@@ -47,11 +47,10 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
             html
         };
         await transportador.sendMail(email).catch(error => {
-            console.log(error);
+            console.log(error)
         });
-        return res.status(200).json({ mensagem: "Pedido cadastrado com sucesso" })
+        return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso" })
     } catch (erro: any) {
-        console.log(erro)
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
