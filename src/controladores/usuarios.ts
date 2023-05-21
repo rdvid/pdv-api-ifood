@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import knex from '../conexao';
+import { knexSetup as knex } from '../conexao';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
-
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
 const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
@@ -20,8 +19,9 @@ const cadastrarUsuario = async (req: Request, res: Response): tipoRespostaPromis
 };
 
 const login = async (req: Request, res: Response): tipoRespostaPromise => {
-    const { email, senha }: { email: string, senha: string } = req.body
     try {
+        const { email }: { email: string} = req.body
+
         const usuario = await knex('usuarios').where({ email: email })
         const token = jwt.sign({ usuario: usuario[0].id }, senhaJwt, { expiresIn: "6h" })
         const { senha: _, ...usuarioLogado } = usuario[0]
@@ -35,10 +35,10 @@ const login = async (req: Request, res: Response): tipoRespostaPromise => {
 };
 
 const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
-    const token: string = req.headers.authorization?.split(" ")[1] as string
-    const { usuario } = jwt.decode(token) as JwtPayload
     try {
-
+        const token: string = req.headers.authorization?.split(" ")[1] as string
+        const { usuario } = jwt.decode(token) as JwtPayload
+        
         let usuarioRetornado = await knex('usuarios').where({ id: usuario }).first()
         const { senha: _, ...usuarioSemSenha } = usuarioRetornado
 
@@ -50,15 +50,15 @@ const inspecionarUsuario = async (req: Request, res: Response): tipoRespostaProm
 };
 
 const editarUsuario = async (req: Request, res: Response): tipoRespostaPromise => {
-    const token: string = req.headers.authorization?.split(" ")[1] as string
-    const { usuario } = jwt.decode(token) as JwtPayload
     try {
+        const token: string = req.headers.authorization?.split(" ")[1] as string
+        const { usuario } = jwt.decode(token) as JwtPayload
         const { nome, email, senha }: { nome: string, email: string, senha: string } = req.body
         const senhaHash: string = await bcrypt.hash(senha.toString(), 10)
         await knex('usuarios').update({ nome, email, senha: senhaHash }).where({ id: usuario })
         return res.status(200).json({ mensagem: "usuario atualizado" })
     } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno de servidor2" })
+        return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 };
 

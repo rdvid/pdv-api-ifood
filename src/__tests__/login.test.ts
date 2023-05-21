@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../index';
 import http from 'http';
-import knex from '../conexao';
+
 let server: http.Server;
 let token: string = ""
 

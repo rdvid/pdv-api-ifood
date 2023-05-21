@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import knex from '../conexao';
+import { knexSetup as knex } from '../conexao';
 import dotenv from 'dotenv';
 import { viaCepApi } from '../Config/APIs';
 dotenv.config();
@@ -122,27 +122,10 @@ const detalhaCliente = async (req: Request, res: Response): tipoRespostaPromise 
         return res.status(500).json({ mensagem: "Erro interno de servidor" })
     }
 }
-const deletaCliente = async (req: Request, res: Response): tipoRespostaPromise => {
-    try {
-        // rota criada especificamente para limpar a base de dados, não precisa where
-        // const { id } = req.params
-        // const clienteExiste = await knex('clientes').where({ id: id }).first()
-        // if (!clienteExiste) {
-        //     return res.status(404).json({ mensagem: "cliente não encontrado" })
-        // }
-        await knex('pedido_produtos').delete()
-        await knex('pedidos').delete()
-        await knex('clientes').delete() //.where({ id: id })
-        return res.status(204).send()
-    } catch (erro: any) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" })
-    }
-}
 
 export {
     cadastraCliente,
     AlteraCadastroCliente,
     listarClientes,
-    detalhaCliente,
-    deletaCliente
+    detalhaCliente
 }

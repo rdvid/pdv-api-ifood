@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../index';
 import http from 'http';
-import knex from '../conexao';
+import { knexSetup as knex } from '../conexao';
 // import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { pegarTokenValido } from './__fixtures__';
