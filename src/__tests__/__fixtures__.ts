@@ -37,11 +37,24 @@ const cadastraClienteTeste = async (nome: string, email: string, cpf: string, ce
         nome, email, cpf, cep, rua, numero, bairro, cidade, estado
     }).returning(['id'])
 }
-Const geraProdutoTeste = async('produtoteste1')
+const geraProdutoTeste = async () => {
+    let produto1 = await knex('produtos').where({ descricao: 'produtoteste1' }).first()
+    if (!produto1) {
+        await cadastraProduto('produtoteste1', 1000, 3000, 1)
+        produto1 = await knex('produtos').where({ descricao: 'produtoteste1' }).first()
+    }
+    let produto2 = await knex('produtos').where({ descricao: 'produtoteste2' }).first()
+    if (!produto2) {
+        await cadastraProduto('produtoteste2', 1000, 3000, 1)
+        produto2 = await knex('produtos').where({ descricao: 'produtoteste2' }).first()
+    }
+    return { produto1, produto2 }
+}
 const cadastraProduto = async (descricao: string, quantidade_estoque: number, valor: number, categoria_id: number) => {
-    await knex('produtos').insert({ descricao, quatidade_estoque, valor, categoria_id })
+    await knex('produtos').insert({ descricao, quantidade_estoque, valor, categoria_id }).returning(['id'])
 }
 export {
     pegarTokenValido,
-    criaIdClienteTest
+    criaIdClienteTest,
+    geraProdutoTeste
 }

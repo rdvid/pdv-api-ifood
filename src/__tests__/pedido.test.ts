@@ -3,7 +3,7 @@ import app from '../index';
 import http from 'http';
 import knex from '../conexao';
 import dotenv from 'dotenv';
-import { pegarTokenValido, criaIdClienteTest } from './__fixtures__';
+import { pegarTokenValido, criaIdClienteTest, geraProdutoTeste } from './__fixtures__';
 dotenv.config();
 
 let server: http.Server;
@@ -23,11 +23,12 @@ afterAll(async () => {
 test('POST/pedido - Cadastro de pedido deve retornar status 500 ao enviar um corpo de requisição inválido', async () => {
     const token = await pegarTokenValido()
     const idCliente = await criaIdClienteTest()
+    const products = await geraProdutoTeste()
     const response = await request(server)
         .post('/pedido')
         .set('Authorization', `Bearer ${token}`)
         .send({
-            cliente_id: idCliente.id, observacao: "testes", pedido_produtos: [{ produto_id: "6", quantidade_produto: "1" }]
+            cliente_id: idCliente.id, observacao: "testes", pedido_produtos: [{ produto_id: products.produto1.id, quantidade_produto: "1" }, { produto_id: products.produto2.id, quantidade_produto: "1" }]
         });
     expect(response.status).toBe(500);
 });

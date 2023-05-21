@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import knex from '../conexao';
-// import { Transporter } from '../Config/email.js';
 import nodemailer from 'nodemailer'
-import { Transporter } from 'nodemailer';
 import { compiladorHTML } from '../Config/email/compiladorHTML';
-// import email from '../Config/email';
+import { transportador } from '../Config/email/emailConfig';
+
 
 interface Produto {
     produto_id: number,
@@ -26,8 +25,7 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
         const pedido_id = idPedido[0].id
         let valor_total: number = 0
         for (let i: number = 0; i < pedido_produtos.length; i++) {
-            const produto_id = pedido_produtos[i].produto_id
-            const quantidade_produto: number = pedido_produtos[i].quantidade_produto
+            const { produto_id, quantidade_produto } = pedido_produtos[i]
             const { valor, quantidade_estoque } = await knex('produtos').select('valor', 'quantidade_estoque').where({ id: produto_id }).first()
             await knex('pedido_produtos').insert({ pedido_id, produto_id, quantidade_produto, valor_produto: valor })
             valor_total = valor_total + (valor * quantidade_produto)
@@ -42,29 +40,16 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
 
         const html = await compiladorHTML('./src/Config/email/template.html', { nome: cliente.nome, pedido, produtos })
 
-
-        const transportador: Transporter = nodemailer.createTransport({
-            host: 'smtp-relay.sendinblue.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: 'rafael_dvid@hotmail.com',
-                pass: '3zSIxvHkLrCn6a7U'
-            },
-            tls: {
-                rejectUnauthorized: true
-            }
-        });
         const email = {
             from: '"Sua compra" <"rafael_dvid@hotmail.com">',
-            to: "wladimir12oliveira@gmail.com",
+            to: `${cliente.email}`,
             subject: '👀 Hola ',
             html
         };
         await transportador.sendMail(email).catch(error => {
             console.log(error);
         });
-        return res.status(200).json({ mensagem: "cadastrou" })
+        return res.status(200).json({ mensagem: "Pedido cadastrado com sucesso" })
     } catch (erro: any) {
         console.log(erro)
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
