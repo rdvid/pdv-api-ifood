@@ -181,17 +181,6 @@ const validarCadastroDeCliente = async(req: Request, res:Response, next: NextFun
 
 };
 
-const verificaEnvioDeDadosOpcionais = (dados: string[]):string[] => {
-    
-    let dadosRecebidos: string[] = []
-    for(let dado in dados){
-        if(dado){
-            dadosRecebidos.push(dado)
-        }
-    }
-
-    return dadosRecebidos
-}
 
 export {
     cpfValido,

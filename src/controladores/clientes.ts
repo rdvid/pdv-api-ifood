@@ -1,46 +1,19 @@
 import { Request, Response } from 'express';
 import { knexSetup as knex } from '../conexao';
 import dotenv from 'dotenv';
-import { viaCepApi } from '../Config/APIs';
-dotenv.config();
+import { Cliente } from '../interfaces/interface';
 
+dotenv.config();
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
 const cadastraCliente = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
-        let { nome, email, cpf, cep, rua, numero, bairro, cidade, estado }: { nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string, estado: string, } = req.body
-        let cpfarray: string[] = cpf.split("")
-        let cpfFormatado: string = ""
-        for (let item of cpfarray) {
-            if (item >= "0" && item <= "9") {
-                cpfFormatado += item
-            }
+        let dadosCliente :Cliente = req.body
+        if(req.body.novoCliente){
+            dadosCliente = req.body.novoCliente
         }
-        let dadosCliene = { nome, email, cpf: cpfFormatado, cep, rua, numero, bairro, cidade, estado }
-
-        if (estado) {
-            if (estado.length != 2) {
-                return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
-            }
-        }
-
-        let cepFormatado: string = ""
-
-        if (cep != "") {
-            let cepArray: string[] = cep.split("")
-            for (let item of cepArray) {
-                if (item >= "0" && item <= "9") {
-                    cepFormatado += item
-                }
-            }
-            if (cepFormatado.length != 8) {
-                return res.status(400).json({ mensagem: "CEP inválido. verifique os dados inseridos e tente novamente!" })
-            }
-            let { data } = await viaCepApi.get(`/${cepFormatado}/json`)
-            dadosCliene = { nome, email, cpf: cpfFormatado, cep: data.cep.replace("-", ""), rua: data.logradouro, numero, bairro: data.bairro, cidade: data.localidade, estado: data.uf }
-        }
-        await knex('clientes').insert(dadosCliene);
+        await knex('clientes').insert(dadosCliente);
         return res.status(201).json({ mensagem: "cliente cadastrado" });
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
@@ -100,6 +73,7 @@ const AlteraCadastroCliente = async (req: Request, res: Response): tipoRespostaP
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
+
 const listarClientes = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const consulta = await knex('clientes');
