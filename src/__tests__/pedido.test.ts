@@ -1,13 +1,11 @@
 import request from 'supertest';
 import app from '../index';
 import http from 'http';
-import knex from '../conexao';
 import dotenv from 'dotenv';
 import { pegarTokenValido, criaIdClienteTest, geraProdutoTeste } from './__fixtures__';
 dotenv.config();
 
 let server: http.Server;
-let token: string = ""
 
 beforeAll(async () => {
     server = app.listen(3003, () => {

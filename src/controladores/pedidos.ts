@@ -3,6 +3,8 @@ import { knexSetup as knex } from '../conexao';
 import { compiladorHTML } from '../Config/email/compiladorHTML';
 import { transportador } from '../Config/email/emailConfig';
 
+const { EMAIL_USER } = process.env
+
 interface Produto {
     produto_id: number,
     quantidade_produto: number
@@ -34,7 +36,7 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
         const html = await compiladorHTML('./src/Config/email/template.html', { nome: cliente.nome, pedido, produtos })
 
         const email = {
-            from: '"Rafael" <"rafael_dvid@hotmail.com">',
+            from: `Rafael <${EMAIL_USER}>`,
             to: `${cliente.email}`,
             subject: 'Status da Compra Debbuggers',
             html

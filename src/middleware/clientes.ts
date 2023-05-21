@@ -181,7 +181,6 @@ const validarCadastroDeCliente = async(req: Request, res:Response, next: NextFun
 
 };
 
-
 export {
     cpfValido,
     cpfExistente,
