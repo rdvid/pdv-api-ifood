@@ -24,12 +24,12 @@ test('POST/pedido - Cadastro de pedido deve retornar status 500 ao enviar um cor
     const token = await pegarTokenValido()
     const idCliente = await criaIdClienteTest()
     const products = await geraProdutoTeste()
+    const cliente_id: number = idCliente.id
     const response = await request(server)
+
         .post('/pedido')
         .set('Authorization', `Bearer ${token}`)
-        .send({
-            cliente_id: idCliente.id, observacao: "testes", pedido_produtos: [{ produto_id: products.produto1.id, quantidade_produto: "1" }, { produto_id: products.produto2.id, quantidade_produto: "1" }]
-        });
+        .send({ cliente_id, observacao: "testes", pedido_produtos: [{ produto_id: products.produto1.id, quantidade_produto: 1 }, { produto_id: products.produto2.id, quantidade_produto: 1 }] })// sem o campo e-mail
     expect(response.status).toBe(500);
 });
 // com o campo cliente_id vazio
