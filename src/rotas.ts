@@ -3,9 +3,9 @@ import { listarCategorias, listarProdutos, adicionarProduto, detalharProduto, ed
 import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario } from './controladores/usuarios'
 import { listarClientes, detalhaCliente, deletaCliente, cadastraCliente, AlteraCadastraCliente } from './controladores/clientes';
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
-import { produtoExiste, categoriaExiste } from './middleware/produtos'
+import { produtoExiste, categoriaExiste, excluirImagem, validaUrlDeImagem } from './middleware/produtos'
 import { cpfValido, validaAlteracaoCliente, cpfExistente, validarCadastroDeCliente } from './middleware/clientes';
-import { listarImagens, cadastrarImagem, deletarImagem } from './controladores/arquivos'
+import { listarImagens, cadastrarImagem } from './controladores/arquivos'
 import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente } from './schemas/schemasJoi'
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../swagger.json';
@@ -28,12 +28,13 @@ rotas.delete('/cliente/:id', deletaCliente)
 //criar , listar
 rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', produtoExiste, detalharProduto)
-rotas.post('/produto', validarCamposBody(schemaCadastroProduto), categoriaExiste, adicionarProduto)
-rotas.put('/produto/:id',produtoExiste, validarCamposBody(schemaCadastroProduto), categoriaExiste, editarProduto)
+rotas.post('/produto', validarCamposBody(schemaCadastroProduto), categoriaExiste, validaUrlDeImagem, adicionarProduto)
+
+rotas.put('/produto/:id',produtoExiste, validarCamposBody(schemaCadastroProduto), categoriaExiste, validaUrlDeImagem, excluirImagem, editarProduto)
+
 rotas.delete('/produto/:id', produtoExiste, deletarProduto)
 //upload
 rotas.get('/arquivos', listarImagens)
 rotas.post('/arquivo/upload', cadastrarImagem)
 
-rotas.delete('/arquivo/deletar', deletarImagem)
 export default rotas;

@@ -30,41 +30,27 @@ const listarImagens = async (req: Request, res: Response): tipoRespostaPromise =
 }
 
 const cadastrarImagem = async (req: Request, res:Response): tipoRespostaPromise => {
-    const { image }:{image:string}= req.body;
+    const { image }:{ image:string }= req.body;
 
     try {
         const base64_image = new Buffer(image, "base64")
 
         const arquivo = await s3.upload({
             Bucket: `${BACKBLAZE_BUCKET}`,
-            Key: 'TESTE',
+            Key: `img-${+new Date}`,
             Body: base64_image,
             ContentType: 'image/jpeg'
         }).promise()
 
-        return res.status(201).json(arquivo)
+        return res.status(201).json({url: `https://${BACKBLAZE_BUCKET}.${ENDPOINT_S3}/${arquivo.Key}`})
 
     } catch (error) {
         return res.status(500).json({mensagem: "Erro interno do servidor."})
     }
 }
 
-const deletarImagem = async (req: Request, res:Response): tipoRespostaPromise => {
-    try {
-        await s3.deleteObject({
-            Bucket: `${BACKBLAZE_BUCKET}`,
-            Key: 'TESTE'
-        }).promise()
-
-        return res.status(204).send()
-
-    } catch (error) {
-         return res.status(500).json({mensagem: "Erro interno do servidor."})
-    }
-}
 
 export {
     listarImagens,
-    cadastrarImagem,
-    deletarImagem
+    cadastrarImagem
 }

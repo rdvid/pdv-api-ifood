@@ -136,8 +136,9 @@ const validarCadastroDeCliente = async(req: Request, res:Response, next: NextFun
                 });
             }
         }
-
+    
         for(let dado = 0; dado < dadosOpcionais.length; dado++){
+
             if (dadosOpcionais[dado].key == 'estado') {
                 if (req.body.estado.length != 2) {
                     return res.status(400).json({ mensagem: "O estado deve ser informado no padrão de Unidade Federativa (UF)" })
@@ -171,16 +172,17 @@ const validarCadastroDeCliente = async(req: Request, res:Response, next: NextFun
             }
 
         }
-        console.log(req.body)
+
         next();
 
     } catch (error) {
         return res.status(500).json({mensagem: "Erro interno do servidor."})
     }
 
-}
+};
 
 const verificaEnvioDeDadosOpcionais = (dados: string[]):string[] => {
+    
     let dadosRecebidos: string[] = []
     for(let dado in dados){
         if(dado){

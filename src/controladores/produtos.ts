@@ -8,7 +8,6 @@ const { BACKBLAZE_BUCKET } = process.env
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
-
 const listarCategorias = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const consulta = await knex('categorias');
@@ -37,20 +36,8 @@ const listarProdutos = async (req: Request, res: Response): tipoRespostaPromise 
 
 const adicionarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try { 
-    
-        const { descricao, quantidade_estoque, valor, categoria_id, produto_imagem }:
-        { descricao: string, quantidade_estoque: number, valor: number, categoria_id: number, produto_imagem: string } = req.body;
         
-        const novoProduto:Produto = {
-            descricao,
-            quantidade_estoque,
-            valor,
-            categoria_id
-        }
-
-        if(produto_imagem){
-            novoProduto.produto_imagem = produto_imagem
-        }
+        const novoProduto:Produto = req.body
 
         const insert = await knex('produtos')
                             .insert(novoProduto)
@@ -79,10 +66,9 @@ const detalharProduto = async (req: Request, res: Response): tipoRespostaPromise
 const editarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const { id } = req.params;
-        const { descricao, quantidade_estoque, valor, categoria_id }:
-        {descricao: string, quantidade_estoque: number, valor: number, categoria_id: number} = req.body;
-
-        await knex('produtos').update({descricao, quantidade_estoque, valor, categoria_id}).where({id: id})
+        const novoProduto:Produto = req.body;
+        
+        await knex('produtos').update(novoProduto).where({id: id})
         return res.status(201).json({mensagem: "Produto atualizado."})
     } catch (error) {
         return res.status(500).json({mensagem: 'Erro interno no servidor.'})
@@ -107,7 +93,6 @@ const deletarProduto = async (req: Request, res: Response): tipoRespostaPromise 
         return res.status(500).json({mensagem: 'Erro interno no servidor.'})
     }
 };
-
 
 export {
     listarCategorias,

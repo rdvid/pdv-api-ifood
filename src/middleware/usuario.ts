@@ -81,8 +81,6 @@ const usuarioLogado = async (req: Request, res: Response, next: NextFunction) =>
 
 };
 
-
-
 export {
     validarCamposBody,
     validarLogin,

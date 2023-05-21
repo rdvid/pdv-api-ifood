@@ -78,9 +78,7 @@ const schemaCadastroProduto = Joi.object({
         'base.number': 'O campo categoria_id precisa ser informado.',
     }),
     produto_imagem: Joi.string().uri().messages({
-        'string.empty': 'O campo produto_imagem não pode ser vazio.',
-        'string.domain': 'Insira uma url válida no campo produto_imagem.',
-        'string.uri': 'Por favor, insira uma url válida da imagem no campo produto_imagem.'
+        'string.empty': 'O campo produto_imagem não pode ser vazio.'
     })
 });
 
