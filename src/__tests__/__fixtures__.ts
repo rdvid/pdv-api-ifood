@@ -22,6 +22,26 @@ const criarUsuario = async (nome: string, email: string, senha: string) => {
     await knex('usuarios').insert({ nome, email, senha: senhaHash }).returning(['id', 'nome', 'email']);
 }
 
+const criaIdClienteTest = async () => {
+    let cliente = await knex('clientes').where({ email: 'teste@teste.com' }).first()
+    if (!cliente) {
+        await cadastraClienteTeste('teste', 'teste@teste.com', '07513199965', '88030300', 'teste', '2285', 'teste', 'teste', 'TS')
+        cliente = await knex('clientes').where({ email: 'teste@teste.com' }).first()
+    }
+    return cliente
+}
+
+const cadastraClienteTeste = async (nome: string, email: string, cpf: string, cep: string, rua: string, numero: string, bairro: string, cidade: string,
+    estado: string) => {
+    await knex('clientes').insert({
+        nome, email, cpf, cep, rua, numero, bairro, cidade, estado
+    }).returning(['id'])
+}
+Const geraProdutoTeste = async('produtoteste1')
+const cadastraProduto = async (descricao: string, quantidade_estoque: number, valor: number, categoria_id: number) => {
+    await knex('produtos').insert({ descricao, quatidade_estoque, valor, categoria_id })
+}
 export {
-    pegarTokenValido
+    pegarTokenValido,
+    criaIdClienteTest
 }

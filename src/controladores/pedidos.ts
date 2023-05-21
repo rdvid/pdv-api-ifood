@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import knex from '../conexao';
 // import { Transporter } from '../Config/email.js';
 import nodemailer from 'nodemailer'
+import { Transporter } from 'nodemailer';
+import { compiladorHTML } from '../Config/email/compiladorHTML';
 // import email from '../Config/email';
 
 interface Produto {
@@ -33,25 +35,38 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
             await knex('produtos').update({ quantidade_estoque: novoEstoque }).where({ id: produto_id })
         }
         await knex('pedidos').update({ valor_total }).where({ id: pedido_id })
-        const cliente = await knex('clientes').select('nome', 'email').where({ id: cliente_id }).first()
 
-        const transportador = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+        const cliente = await knex('clientes').select('nome', 'email').where({ id: cliente_id }).first()
+        const pedido = await knex('pedidos').where({ id: pedido_id })
+        const produtos = await knex('pedido_produtos').where({ pedido_id })
+
+        const html = await compiladorHTML('./src/Config/email/template.html', { nome: cliente.nome, pedido, produtos })
+
+
+        const transportador: Transporter = nodemailer.createTransport({
+            host: 'smtp-relay.sendinblue.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'rafael_dvid@hotmail.com',
+                pass: '3zSIxvHkLrCn6a7U'
+            },
+            tls: {
+                rejectUnauthorized: true
+            }
         });
         const email = {
-            from: process.env.EMAIL_FROM,
+            from: '"Sua compra" <"rafael_dvid@hotmail.com">',
             to: "wladimir12oliveira@gmail.com",
             subject: '👀 Hola ',
-            template: "chegou o e-mail"
-            // context: { "incident" }
+            html
         };
         await transportador.sendMail(email).catch(error => {
             console.log(error);
         });
-        // enviar e-mail
         return res.status(200).json({ mensagem: "cadastrou" })
     } catch (erro: any) {
+        console.log(erro)
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }

@@ -1,5 +1,38 @@
+import request from 'supertest';
+import app from '../index';
+import http from 'http';
+import knex from '../conexao';
+import dotenv from 'dotenv';
+import { pegarTokenValido, criaIdClienteTest } from './__fixtures__';
+dotenv.config();
+
+let server: http.Server;
+let token: string = ""
+
+beforeAll(async () => {
+    server = app.listen(3003, () => {
+    });
+});
+
+afterAll(async () => {
+    server.closeAllConnections()
+});
+
+
 // sem o campo cliente_id
+test('POST/pedido - Cadastro de pedido deve retornar status 500 ao enviar um corpo de requisição inválido', async () => {
+    const token = await pegarTokenValido()
+    const idCliente = await criaIdClienteTest()
+    const response = await request(server)
+        .post('/pedido')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            cliente_id: idCliente.id, observacao: "testes", pedido_produtos: [{ produto_id: "6", quantidade_produto: "1" }]
+        });
+    expect(response.status).toBe(500);
+});
 // com o campo cliente_id vazio
+
 // com cliente_id inexistente na base de dados
 // sem o campo observação
 // com o campo observação vazio
