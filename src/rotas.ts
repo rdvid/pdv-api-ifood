@@ -8,10 +8,11 @@ import { produtoExiste, categoriaExiste, excluirImagem, validaUrlDeImagem, valid
 import { cpfValido, validaAlteracaoCliente, cpfExistente, validarCadastroDeCliente } from './middleware/clientes';
 import { listarImagens, cadastrarImagem } from './controladores/arquivos'
 import swaggerUi from 'swagger-ui-express';
-import swaggerDoc from '../swagger.json';
+import { swagger } from './docs/swagger';
 import { cadastraPedido, listaPedidos } from './controladores/pedidos';
 import { existeCliente_id, validaIdPedido, validaprodutos_pedido } from './middleware/pedidos';
 import multer from 'multer';
+
 
 let multpart = multer({})
 
@@ -20,7 +21,7 @@ const rotas: Router = express.Router();
 rotas.post('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false, 'usuarios'), cadastrarUsuario);
 rotas.post('/login', emailExiste(true, 'usuarios'), validarLogin(schemaLogin), login);
 rotas.get('/categoria', listarCategorias)
-rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger));
 rotas.use(usuarioLogado)
 rotas.get('/usuario', inspecionarUsuario)
 rotas.put('/usuario', validarCamposBody(schemaCadastroUsuario), emailExiste(false, 'usuarios'), editarUsuario)
