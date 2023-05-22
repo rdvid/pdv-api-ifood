@@ -38,7 +38,25 @@ const schemaCadastroCliente = Joi.object({
     cpf: Joi.string().required().messages({
         'any.required': 'O campo cpf é obrigatório!',
         'string.empty': 'O campo cpf deve ser informado!',
-    })
+    }),
+    cep: Joi.required().messages({
+        'any.required': 'O campo cep é obrigatório!'
+    }),
+    rua: Joi.required().messages({
+        'any.required': 'O campo rua é obrigatório!'
+    }),
+    numero: Joi.required().messages({
+        'any.required': 'O campo número é obrigatório!'
+    }),
+    bairro: Joi.required().messages({
+        'any.required': 'O campo bairro é obrigatório!'
+    }),
+    cidade: Joi.required().messages({
+        'any.required': 'O campo cidade é obrigatório!'
+    }),
+    estado: Joi.required().messages({
+        'any.required': 'O campo estado é obrigatório!'
+    }),
 });
 
 const schemaCadastroProduto = Joi.object({
