@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { s3 } from '../conexao';
 import dotenv from 'dotenv'
 dotenv.config();
+import Joi from 'joi';
 
 const { BACKBLAZE_BUCKET, ENDPOINT_S3  } = process.env
 
@@ -30,9 +31,12 @@ const listarImagens = async (req: Request, res: Response): tipoRespostaPromise =
 }
 
 const cadastrarImagem = async (req: Request, res:Response): tipoRespostaPromise => {
-    const { image }:{ image:string }= req.body;
 
+
+    
     try {
+        
+        const { image }:{ image:string }= req.body;
         const base64_image = new Buffer(image, "base64")
 
         const arquivo = await s3.upload({

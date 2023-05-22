@@ -106,7 +106,14 @@ const schemaCadastroPedido = Joi.object({
             'string.empty': 'O campo quantidade_produto deve ser informado!'
         })
     }
-})
+});
+
+const image = Joi.object({
+    imagem: Joi.string().base64().required().messages({
+        'any.required': 'envie uma imagem válida em formato Base64.',
+        'string.base64': 'Insira um texto em formato Base64.'
+    })
+});
 
 
 export {
@@ -114,5 +121,6 @@ export {
     schemaLogin,
     schemaCadastroCliente,
     schemaCadastroProduto,
-    schemaCadastroPedido
+    schemaCadastroPedido,
+    image
 }
