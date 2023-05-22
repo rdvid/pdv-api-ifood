@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import knex from '../conexao'
-
+import { knexSetup as knex } from '../conexao'
 
 const existeCliente_id = async (req: Request, res: Response, next: NextFunction) => {
     const { cliente_id }: { cliente_id: string } = req.body

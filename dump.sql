@@ -28,6 +28,7 @@ create table produtos(
     quantidade_estoque int not null,
     valor int not null,
     categoria_id int references categorias(id)
+    produto_imagem text unique
 );
 
 create table clientes(
@@ -49,6 +50,7 @@ create table pedidos(
     observacao text,
     valor_total int
 );
+
 create table pedido_produtos(
     id serial primary key,
     pedido_id int references pedidos(id),

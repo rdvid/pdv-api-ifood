@@ -1,15 +1,12 @@
 import request from 'supertest';
 import app from '../index';
 import http from 'http';
-import knex from '../conexao';
-// import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import { knexSetup as knex } from '../conexao';
 import dotenv from 'dotenv';
 import { pegarTokenValido } from './__fixtures__';
 dotenv.config();
-// const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
 
 let server: http.Server;
-let token: string = ""
 
 beforeAll(async () => {
     server = app.listen(3003, () => {
@@ -133,7 +130,7 @@ test('POST /cliente - Cadastro de clientes deve retornar status 201 ao enviar um
     const response = await request(server)
         .post('/cliente')
         .set('Authorization', `Bearer ${token}`)
-        .send({ nome: "Wladimir", email: "canguru.fugilista@gmiil.com", cpf: "352.362.257-36", cep: "", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cpf com pontos e traço
+        .send({ nome: "Wladimir", email: "canguru.fugilista@gmiil.com", cpf: "352.362.257-36", rua: "88.030-300", numero: "25", bairro: "João Paulo", cidade: "", estado: "" }); // com o campo cpf com pontos e traço
     expect(response.status).toBe(201);
 });
 // com o campo email em formato inválido

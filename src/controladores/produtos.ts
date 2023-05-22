@@ -1,10 +1,10 @@
 import { Request, Response, response } from 'express';
-// import bcrypt from 'bcrypt';
-import knex from '../conexao';
-// import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import { knexSetup as knex, s3 } from '../conexao';
 import dotenv from 'dotenv';
+import { Produto } from '../interfaces/interface';
 dotenv.config();
-// const senhaJwt: Secret = process.env.JWT_SECRET_KEY!;
+
+const { BACKBLAZE_BUCKET } = process.env
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
 
@@ -20,6 +20,13 @@ const listarCategorias = async (req: Request, res: Response): tipoRespostaPromis
 const listarProdutos = async (req: Request, res: Response): tipoRespostaPromise => {
 
     try {
+        const { categoria_id } = req.query;
+        
+        if(categoria_id){
+            const consulta = await knex('produtos').where({categoria_id: categoria_id})
+            return res.status(200).json(consulta)
+        }
+
         const consulta = await knex('produtos');
         return res.status(200).json(consulta)
     } catch (error: any) {
@@ -28,18 +35,17 @@ const listarProdutos = async (req: Request, res: Response): tipoRespostaPromise 
 };
 
 const adicionarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
-    try {
-        const { descricao, quantidade_estoque, valor, categoria_id }:
-            { descricao: string, quantidade_estoque: number, valor: number, categoria_id: number } = req.body;
+    try { 
+        
+        const novoProduto:Produto = req.body
 
         const insert = await knex('produtos')
-            .insert({ descricao, quantidade_estoque, valor, categoria_id })
-            .returning(['descricao', 'quantidade_estoque', 'valor', 'categoria_id']);
-
+                            .insert(novoProduto)
+                            .returning('*');
+        
         return res.status(201).json(insert[0]);
-
-    } catch (error: any) {
-        return res.status(500).json({ mensagem: "Erro interno no servidor." });
+    } catch (error:any) {
+        return res.status(500).json({mensagem: "Erro interno no servidor."});
     }
 };
 
@@ -60,25 +66,33 @@ const detalharProduto = async (req: Request, res: Response): tipoRespostaPromise
 const editarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
         const { id } = req.params;
-        const { descricao, quantidade_estoque, valor, categoria }:
-            { descricao: string, quantidade_estoque: number, valor: number, categoria: number } = req.body;
-
-        const produto = await knex('produtos').update({ descricao, quantidade_estoque, valor, categoria }).where({ id: id })
-        return res.status(201).json({ mensagem: "Produto atualizado." })
+        const novoProduto:Produto = req.body;
+        
+        await knex('produtos').update(novoProduto).where({id: id})
+        return res.status(201).json({mensagem: "Produto atualizado."})
     } catch (error) {
         return res.status(500).json({ mensagem: 'Erro interno no servidor.' })
     }
-}
+};
 
 const deletarProduto = async (req: Request, res: Response): tipoRespostaPromise => {
     try {
+        const { produto_imagem }:{produto_imagem:string} = req.body
+        if(produto_imagem){
+            let url = produto_imagem.split("/")
+            let key = url[url.length -1]
+            await s3.deleteObject({
+                Bucket: `${BACKBLAZE_BUCKET}`,
+                Key: key
+            }).promise()
+        }
         const { id } = req.params;
         await knex('produtos').delete().where({ id: id });
         return res.status(204).json()
     } catch (error) {
         return res.status(500).json({ mensagem: 'Erro interno no servidor.' })
     }
-}
+};
 
 export {
     listarCategorias,

@@ -1,18 +1,13 @@
 import { Request, Response } from 'express';
-import knex from '../conexao';
-import nodemailer from 'nodemailer'
+import { knexSetup as knex } from '../conexao';
 import { compiladorHTML } from '../Config/email/compiladorHTML';
 import { transportador } from '../Config/email/emailConfig';
 
+const { EMAIL_USER } = process.env
 
 interface Produto {
     produto_id: number,
     quantidade_produto: number
-}
-interface PedidoProduto {
-    client_id: string;
-    observacao: string;
-    pedido_produtos: Produto[]
 }
 
 type tipoRespostaPromise = Promise<Response<any, Record<string, any>>>;
@@ -41,19 +36,20 @@ const cadastraPedido = async (req: Request, res: Response): tipoRespostaPromise 
         const html = await compiladorHTML('./src/Config/email/template.html', { nome: cliente.nome, pedido, produtos })
 
         const email = {
-            from: '"Sua compra" <"rafael_dvid@hotmail.com">',
+            from: `Rafael <${EMAIL_USER}>`,
             to: `${cliente.email}`,
-            subject: '👀 Hola ',
+            subject: 'Status da Compra Debbuggers',
             html
         };
-        await transportador.sendMail(email).catch(error => {
+        await transportador.sendMail(email).catch((error:Error) => {
             console.log(error)
         });
         return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso" })
     } catch (erro: any) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
-}
+};
+
 const listaPedidos = async (req: Request, res: Response): tipoRespostaPromise => {
     const { cliente_id } = req.query
     try {
@@ -82,7 +78,8 @@ const listaPedidos = async (req: Request, res: Response): tipoRespostaPromise =>
     } catch (erro) {
         return res.status(500).json({ mensagem: "Erro interno do servidos" })
     }
-}
+};
+
 export {
     cadastraPedido,
     listaPedidos
