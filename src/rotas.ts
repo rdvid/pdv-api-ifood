@@ -3,7 +3,7 @@ import { listarCategorias, listarProdutos, adicionarProduto, detalharProduto, ed
 import { cadastrarUsuario, login, inspecionarUsuario, editarUsuario } from './controladores/usuarios'
 import { listarClientes, detalhaCliente, cadastraCliente, AlteraCadastroCliente } from './controladores/clientes';
 import { emailExiste, usuarioLogado, validarCamposBody, validarLogin } from './middleware/usuario'
-import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente, schemaCadastroPedido, image } from './schemas/schemasJoi'
+import { schemaCadastroUsuario, schemaLogin, schemaCadastroProduto, schemaCadastroCliente, schemaCadastroPedido } from './schemas/schemasJoi'
 import { produtoExiste, categoriaExiste, excluirImagem, validaUrlDeImagem, validaDelecaoProduto } from './middleware/produtos'
 import { cpfValido, validaAlteracaoCliente, cpfExistente, validarCadastroDeCliente } from './middleware/clientes';
 import { listarImagens, cadastrarImagem } from './controladores/arquivos'
