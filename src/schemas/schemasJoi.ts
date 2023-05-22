@@ -108,19 +108,10 @@ const schemaCadastroPedido = Joi.object({
     }
 });
 
-const image = Joi.object({
-    imagem: Joi.string().base64().required().messages({
-        'any.required': 'envie uma imagem válida em formato Base64.',
-        'string.base64': 'Insira um texto em formato Base64.'
-    })
-});
-
-
 export {
     schemaCadastroUsuario,
     schemaLogin,
     schemaCadastroCliente,
     schemaCadastroProduto,
-    schemaCadastroPedido,
-    image
+    schemaCadastroPedido
 }

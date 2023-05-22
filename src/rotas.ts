@@ -11,6 +11,9 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../swagger.json';
 import { cadastraPedido, listaPedidos } from './controladores/pedidos';
 import { existeCliente_id, validaIdPedido, validaprodutos_pedido } from './middleware/pedidos';
+import multer from 'multer';
+
+let multpart = multer({})
 
 const rotas: Router = express.Router();
 
@@ -40,6 +43,6 @@ rotas.post('/pedido', validarCamposBody(schemaCadastroPedido), existeCliente_id,
 rotas.get('/pedido', validaIdPedido, listaPedidos)
 //upload
 rotas.get('/arquivos', listarImagens)
-rotas.post('/arquivo/upload', validarCamposBody(image), cadastrarImagem)
+rotas.post('/arquivo/upload', multpart.single('arquivo'), cadastrarImagem)
 
 export default rotas;
