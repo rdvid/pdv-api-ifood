@@ -37,12 +37,11 @@ const cadastrarImagem = async (req: Request, res:Response): tipoRespostaPromise 
     try {
         
         const { image }:{ image:string }= req.body;
-        const base64_image = new Buffer(image, "base64")
 
         const arquivo = await s3.upload({
             Bucket: `${BACKBLAZE_BUCKET}`,
             Key: `img-${+new Date}`,
-            Body: base64_image,
+            Body: image,
             ContentType: 'image/jpeg'
         }).promise()
 
