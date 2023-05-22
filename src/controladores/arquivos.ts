@@ -39,8 +39,7 @@ const cadastrarImagem = async (req: Request, res:Response): tipoRespostaPromise 
         const arquivo = await s3.upload({
             Bucket: `${BACKBLAZE_BUCKET}`,
             Key: `img-${+new Date}`,
-            Body: file,
-            ContentType: 'image/jpeg'
+            Body: file
         }).promise()
 
         return res.status(201).json({url: `https://${BACKBLAZE_BUCKET}.${ENDPOINT_S3}/${arquivo.Key}`})
